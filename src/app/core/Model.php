@@ -25,6 +25,10 @@ abstract class Model {
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();
     }
+    protected function insertAndGetId(string $sql, array $params = []): int {
+        $stmt = $this->query($sql, $params);
+        return $this->db->lastInsertId();
+    }
     protected function update(string $sql, array $params = []): int {
         $stmt = $this->query($sql, $params);
         return $stmt->rowCount();

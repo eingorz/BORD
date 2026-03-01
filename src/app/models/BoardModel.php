@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '../core/Model.php';
+require_once __DIR__ . '/../core/Model.php';
+
 class BoardModel extends Model {
     public function getAll() : array {
         return $this->fetchAll('SELECT * FROM boards');

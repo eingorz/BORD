@@ -1,0 +1,10 @@
+# Turn on the rewriting engine
+RewriteEngine On
+# If the URL points to a file that ACTUALLY exists on the hard drive
+# (like /css/style.css or /images/logo.png), do not rewrite it. Just serve the file.
+RewriteCond %{REQUEST_FILENAME} !-f
+# If the URL points to a directory that ACTUALLY exists, do not rewrite it.
+RewriteCond %{REQUEST_FILENAME} !-d
+# For absolutely everything else (like /g/ or /g/thread/123),
+# silently redirect the request to index.php.
+RewriteRule ^ index.php [QSA,L]
