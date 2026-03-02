@@ -1,8 +1,10 @@
 <?php
+session_start();
 $config = require __DIR__ .'/config/database.php';
 require_once __DIR__ .'/app/core/Database.php';
 require_once __DIR__ .'/app/core/Router.php';
 require_once __DIR__ .'/app/controllers/BoardController.php';
+require_once __DIR__ .'/app/controllers/AuthController.php';
 
 
 $db = new Database($config['dsn'], $config['user'], $config['password']);
@@ -14,6 +16,14 @@ try {
 
 $router = new Router($conn);
 $router->addRoute('GET', '/', 'BoardController', 'index');
+
+// auth routes must be registered first or regex will steal
+$router->addRoute('GET', '/register', 'AuthController', 'showRegister');
+$router->addRoute('POST', '/register', 'AuthController', 'processRegister');
+$router->addRoute('GET', '/login', 'AuthController', 'showLogin');
+$router->addRoute('POST', '/login', 'AuthController', 'processLogin');
+$router->addRoute('GET', '/logout', 'AuthController', 'logout');
+
 $router->addRoute('GET', '/{shortname}', 'BoardController', 'showBoard');
 $router->addRoute('POST', '/{shortname}/submit', 'BoardController', 'submitThread');
 $router->addRoute('GET', '/{shortname}/thread/{id}', 'BoardController', 'showThread');

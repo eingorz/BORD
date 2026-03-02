@@ -14,23 +14,53 @@ class BoardController extends Controller {
     }
 
     public function index() : void {
-        $boards = $this->BoardModel->getAll();
+        $rawBoards = $this->BoardModel->getAll();
+        
+        $categorizedBoards = [];
+        foreach ($rawBoards as $board) {
+            $catName = $board['category_name'] ?? 'Uncategorized';
+            $categorizedBoards[$catName][] = $board;
+        }
+
         $this->render('homepage', [
-            'boards' => $boards
+            'categorizedBoards' => $categorizedBoards
         ]);
     }
+    private function parseContent(string $content) : string {
+        $escaped = htmlspecialchars($content);
+        // Match lines starting with >, capturing up to the end of the line (excluding \r)
+        // This prevents the \r from being trapped inside the span, which caused nl2br to emit <br>\n<br>
+        $escaped = preg_replace('/^(\s*&gt;.*?)\r?$/m', '<span class="greentext">$1</span>', $escaped);
+        return nl2br($escaped);
+    }
+
     public function showBoard(string $shortname) : void {
         $board = $this->BoardModel->getBoardByShort($shortname);
         $posts = $this->PostModel->getPostsByBoardId($board['id']);
+        
+        foreach ($posts as &$post) {
+            $post['parsed_content'] = $this->parseContent($post['content']);
+        }
+        unset($post); // Break the reference
+
         $this->render('board', [
             'board' => $board,
             'posts' => $posts
         ]);
     }
+
     public function showThread(string $shortname, string $id) : void {
         $post = $this->PostModel->getPostById((int)$id);
+        if ($post) {
+            $post['parsed_content'] = $this->parseContent($post['content']);
+        }
+
         $replies = $this->PostModel->getReplies((int)$id);
-        
+        foreach ($replies as &$reply) {
+            $reply['parsed_content'] = $this->parseContent($reply['content']);
+        }
+        unset($reply);
+
         // Pass both the shortname and the thread data to the view
         $this->render('thread', [
             'shortname' => $shortname,
@@ -39,19 +69,64 @@ class BoardController extends Controller {
         ]);
     }
 
+    private function handleUpload(array $file) : ?string {
+        if ($file['error'] !== UPLOAD_ERR_OK) return null;
+        
+        $imageInfo = @getimagesize($file['tmp_name']);
+        if ($imageInfo === false) return null;
+
+        $mime = $imageInfo['mime'];
+        $image = null;
+        $extension = '';
+
+        if ($mime === 'image/jpeg') {
+            $image = @imagecreatefromjpeg($file['tmp_name']);
+            $extension = '.jpg';
+        } elseif ($mime === 'image/png') {
+            $image = @imagecreatefrompng($file['tmp_name']);
+            $extension = '.png';
+        } elseif ($mime === 'image/gif') {
+            $image = @imagecreatefromgif($file['tmp_name']);
+            $extension = '.gif';
+        }
+
+        if (!$image) return null;
+
+        // Exactly 16 characters for the DB schema limitation
+        $filename = substr(bin2hex(random_bytes(6)), 0, 12) . $extension;
+        $destination = __DIR__ . '/../../public/uploads/' . $filename;
+
+        // GD Re-encoding intrinsically sanitizes Polyglot payloads (strips EXIF and appended data)
+        if ($mime === 'image/jpeg') {
+            @imagejpeg($image, $destination, 90);
+        } elseif ($mime === 'image/png') {
+            @imagepng($image, $destination);
+        } elseif ($mime === 'image/gif') {
+            @imagegif($image, $destination);
+        }
+        
+        @imagedestroy($image);
+        return file_exists($destination) ? $filename : null;
+    }
+
     public function submitThread(string $shortname) : void {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($_POST['content'])) {
                 $board = $this->BoardModel->getBoardByShort($shortname);
                 
                 if ($board) {
-                    // Create anonymous (null userid) root thread (null parentid)
-                    $this->PostModel->createPost($board['id'], null, $_POST['content']);
+                    $userid = $_SESSION['userid'] ?? null;
+                    $attachment = null;
+                    
+                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+                        $attachment = $this->handleUpload($_FILES['attachment']);
+                    }
+                    
+                    $this->PostModel->createPost($board['id'], $userid, $_POST['content'], null, $attachment);
                 }
             }
         }
         
-        // PRG Pattern: Redirect to GET catalog to prevent duplicate POST submissions
         $this->redirect('/' . $shortname . '/');
     }
 
@@ -61,8 +136,14 @@ class BoardController extends Controller {
                 $board = $this->BoardModel->getBoardByShort($shortname);
                 
                 if ($board) {
-                    // createPost automatically updates the parent thread's bumptimestamp
-                    $this->PostModel->createPost($board['id'], null, $_POST['content'], (int)$id);
+                    $userid = $_SESSION['userid'] ?? null;
+                    $attachment = null;
+                    
+                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+                        $attachment = $this->handleUpload($_FILES['attachment']);
+                    }
+                    
+                    $this->PostModel->createPost($board['id'], $userid, $_POST['content'], (int)$id, $attachment);
                 }
             }
         }

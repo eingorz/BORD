@@ -18,12 +18,13 @@ class PostModel extends Model {
     // There's no reason to create a createReply function as its just a matter of the parentid being or not being a thing anyway :)
     // Thus we should just use createPost whenever we need to add a reply
 
-    public function createPost(int $boardid, int | null $userid, string $content, int | null $parentid = null) : int {
+    public function createPost(int $boardid, int | null $userid, string $content, int | null $parentid = null, string | null $attachment = null) : int|false {
         $now = date('Y-m-d H:i:s');
-        $postId = $this->insertAndGetId('INSERT INTO posts (boardid, userid, content, timestamp, parentid, bumptimestamp) VALUES (:boardid, :userid, :content, :timestamp, :parentid, :bumptimestamp)', [
+        $postId = $this->insertAndGetId('INSERT INTO posts (boardid, userid, content, attachment, timestamp, parentid, bumptimestamp) VALUES (:boardid, :userid, :content, :attachment, :timestamp, :parentid, :bumptimestamp)', [
             'boardid' => $boardid,
             'userid' => $userid,
             'content' => $content,
+            'attachment' => $attachment,
             'timestamp' => $now,
             'parentid' => $parentid,
             'bumptimestamp' => $now
