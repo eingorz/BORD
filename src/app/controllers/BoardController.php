@@ -198,6 +198,39 @@ class BoardController extends Controller {
         
         $this->redirect('/' . $shortname . '/thread/' . $id);
     }
+    
+    public function deletePost(string $shortname, string $id) : void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_SESSION['userid'])) {
+            $this->redirect('/' . $shortname . '/');
+            return;
+        }
+
+        $post = $this->PostModel->getPostById((int)$id);
+        if (!$post) {
+            $this->redirect('/' . $shortname . '/');
+            return;
+        }
+
+        $isAdmin = isset($_SESSION['role']) && (int)$_SESSION['role'] === 2;
+        $isAuthor = $post['userid'] !== null && (int)$_SESSION['userid'] === (int)$post['userid'];
+
+        if ($isAdmin || $isAuthor) {
+            $this->PostModel->deletePost((int)$id);
+            
+            // If deleting an attachment from disk was desired, we'd do it here like:
+            // if ($post['attachment']) @unlink(__DIR__ . '/../../public/uploads/' . $post['attachment']);
+            
+            // Redirect depending on whether we deleted a thread or a reply
+            if ($post['parentid'] !== null) {
+                // Was a reply, redirect back to the thread
+                $this->redirect('/' . $shortname . '/thread/' . $post['parentid']);
+                return;
+            }
+        }
+        
+        // Either illegal delete attempt or deleted a full thread
+        $this->redirect('/' . $shortname . '/');
+    }
 }
 
 

@@ -50,7 +50,7 @@ require __DIR__ . '/header.php';
     <?php foreach ($posts as $thread): ?>
         <div class="card mb-4 shadow-sm border-secondary bg-dark-subtle">
             <div class="card-body">
-                <!-- Thread Header -->
+                    <!-- Thread Header -->
                 <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
                     <?php if (isset($thread['username']) && $thread['username'] !== null): ?>
                         <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none">
@@ -61,7 +61,16 @@ require __DIR__ . '/header.php';
                     <?php endif; ?>
                     <?php echo $thread['bumptimestamp']; ?> 
                     <span class="ms-2">No. <strong><a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>"><?php echo $thread['id']; ?></a></strong></span>
-                    <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="float-end text-decoration-none">[Reply]</a>
+                    <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="float-end text-decoration-none ms-2">[Reply]</a>
+                    
+                    <?php
+                    $isAuthor = isset($_SESSION['userid']) && $thread['userid'] !== null && $_SESSION['userid'] == $thread['userid'];
+                    $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] == 2;
+                    if ($isAuthor || $isAdmin):
+                    ?>
+                        <form id="delete-thread-<?php echo $thread['id']; ?>" method="POST" action="/<?php echo $board['shortname']; ?>/post/<?php echo $thread['id']; ?>/delete" class="d-none"></form>
+                        <a href="#" class="float-end text-danger text-decoration-none ms-2" onclick="if(confirm('Delete this thread? This cannot be undone.')) document.getElementById('delete-thread-<?php echo $thread['id']; ?>').submit(); return false;">[Delete]</a>
+                    <?php endif; ?>
                 </div>
                 
                 <!-- Thread Content (Flex Layout for Image + Text) -->

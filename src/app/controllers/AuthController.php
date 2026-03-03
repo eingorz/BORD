@@ -52,6 +52,7 @@ class AuthController extends Controller {
                     // Populate session variables
                     $_SESSION['userid'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
+                    $_SESSION['role'] = $user['role'];
                     
                     $this->redirect('/');
                     return;

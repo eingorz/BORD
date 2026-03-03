@@ -47,6 +47,16 @@ require __DIR__ . '/header.php';
             <span class="text-primary fw-bold">Anonymous</span> 
         <?php endif; ?>
         <span class="text-muted ms-2"><?php echo htmlspecialchars($post['timestamp']); ?></span>
+        
+        <?php
+        $isAuthor = isset($_SESSION['userid']) && $post['userid'] !== null && $_SESSION['userid'] == $post['userid'];
+        $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] == 2;
+        if ($isAuthor || $isAdmin):
+        ?>
+            <form id="delete-op-<?php echo $post['id']; ?>" method="POST" action="/<?php echo $shortname; ?>/post/<?php echo $post['id']; ?>/delete" class="d-none"></form>
+            <a href="#" class="float-end text-danger text-decoration-none ms-2" onclick="if(confirm('Delete this thread? This cannot be undone.')) document.getElementById('delete-op-<?php echo $post['id']; ?>').submit(); return false;">[Delete]</a>
+        <?php endif; ?>
+        
         <span class="float-end">No. <strong style="cursor: pointer;" onclick="addReply(event, '<?php echo htmlspecialchars($post['id']); ?>')"><?php echo htmlspecialchars($post['id']); ?></strong></span>
     </div>
     <div class="card-body">
@@ -84,6 +94,16 @@ require __DIR__ . '/header.php';
                             <span class="text-info fw-bold">Anonymous</span> 
                         <?php endif; ?>
                         <?php echo htmlspecialchars($reply['timestamp']); ?> 
+                        
+                        <?php
+                        $isAuthor = isset($_SESSION['userid']) && $reply['userid'] !== null && $_SESSION['userid'] == $reply['userid'];
+                        $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] == 2;
+                        if ($isAuthor || $isAdmin):
+                        ?>
+                            <form id="delete-reply-<?php echo $reply['id']; ?>" method="POST" action="/<?php echo $shortname; ?>/post/<?php echo $reply['id']; ?>/delete" class="d-none"></form>
+                            <a href="#" class="float-end text-danger text-decoration-none ms-2" onclick="if(confirm('Delete this reply? This cannot be undone.')) document.getElementById('delete-reply-<?php echo $reply['id']; ?>').submit(); return false;">[Delete]</a>
+                        <?php endif; ?>
+                        
                         <span class="float-end">No. <strong style="cursor: pointer;" onclick="addReply(event, '<?php echo htmlspecialchars($reply['id']); ?>')"><?php echo htmlspecialchars($reply['id']); ?></strong></span>
                     </div>
                     

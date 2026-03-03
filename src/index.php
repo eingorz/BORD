@@ -35,6 +35,7 @@ $router->addRoute('GET', '/{shortname}/catalog', 'BoardController', 'showCatalog
 $router->addRoute('POST', '/{shortname}/submit', 'BoardController', 'submitThread');
 $router->addRoute('GET', '/{shortname}/thread/{id}', 'BoardController', 'showThread');
 $router->addRoute('POST', '/{shortname}/thread/{id}/reply', 'BoardController', 'submitReply');
+$router->addRoute('POST', '/{shortname}/post/{id}/delete', 'BoardController', 'deletePost');
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);
 ?>

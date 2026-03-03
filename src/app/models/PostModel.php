@@ -76,6 +76,13 @@ class PostModel extends Model {
 
 
 
+    public function deletePost(int $id) : bool {
+        // This query deletes the specific post AND any replies if the post was a parent thread
+        return $this->update('DELETE FROM posts WHERE id = :id OR parentid = :id', [
+            'id' => $id
+        ]) !== false;
+    }
+
 }
 
 
