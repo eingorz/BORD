@@ -2,15 +2,18 @@
 require_once __DIR__ . '/../core/Controller.php';
 require_once __DIR__ . '/../models/BoardModel.php';
 require_once __DIR__ . '/../models/PostModel.php';
+require_once __DIR__ . '/../models/UserModel.php';
 
 class BoardController extends Controller {
     private BoardModel $BoardModel;
     private PostModel $PostModel;
+    private UserModel $UserModel;
 
     public function __construct(PDO $db) {
         parent::__construct($db);
         $this->BoardModel = new BoardModel($db);
         $this->PostModel = new PostModel($db);
+        $this->UserModel = new UserModel($db);
     }
 
     public function index() : void {
@@ -28,15 +31,33 @@ class BoardController extends Controller {
     }
     private function parseContent(string $content) : string {
         $escaped = htmlspecialchars($content);
+        
+        // Link to Posts (>>1234)
+        $escaped = preg_replace('/&gt;&gt;([0-9]+)/', '<a href="#post-$1" class="text-info text-decoration-none fw-bold" onclick="addReply(event, \'$1\')">&gt;&gt;$1</a>', $escaped);
+        
         // Match lines starting with >, capturing up to the end of the line (excluding \r)
         // This prevents the \r from being trapped inside the span, which caused nl2br to emit <br>\n<br>
-        $escaped = preg_replace('/^(\s*&gt;.*?)\r?$/m', '<span class="greentext">$1</span>', $escaped);
+        $escaped = preg_replace('/^(\s*&gt;(?!&gt;).*?)\r?$/m', '<span class="greentext">$1</span>', $escaped);
+        
         return nl2br($escaped);
     }
 
-    public function showBoard(string $shortname) : void {
+    public function showBoard(string $shortname, string $page = '1') : void {
         $board = $this->BoardModel->getBoardByShort($shortname);
-        $posts = $this->PostModel->getPostsByBoardId($board['id']);
+        if (!$board) {
+            $this->redirect('/');
+            return;
+        }
+
+        // Pagination settings
+        $threadsPerPage = 10;
+        $currentPage = max(1, (int)$page);
+        $offset = ($currentPage - 1) * $threadsPerPage;
+
+        // Fetch limited posts and total count
+        $posts = $this->PostModel->getPostsByBoardId($board['id'], $threadsPerPage, $offset);
+        $totalThreads = $this->PostModel->countThreadsByBoardId($board['id']);
+        $totalPages = ceil($totalThreads / $threadsPerPage);
         
         foreach ($posts as &$post) {
             $post['parsed_content'] = $this->parseContent($post['content']);
@@ -44,6 +65,33 @@ class BoardController extends Controller {
         unset($post); // Break the reference
 
         $this->render('board', [
+            'board' => $board,
+            'posts' => $posts,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages
+        ]);
+    }
+
+    public function showCatalog(string $shortname) : void {
+        $board = $this->BoardModel->getBoardByShort($shortname);
+        if (!$board) {
+            $this->redirect('/');
+            return;
+        }
+
+        // Fetch up to 100 threads for the catalog view without pagination
+        $posts = $this->PostModel->getPostsByBoardId($board['id'], 100, 0); 
+        
+        foreach ($posts as &$post) {
+            $preview = $post['content'];
+            if (mb_strlen($preview) > 100) {
+                $preview = mb_substr($preview, 0, 97) . '...';
+            }
+            $post['parsed_content'] = $this->parseContent($preview);
+        }
+        unset($post); 
+
+        $this->render('catalog', [
             'board' => $board,
             'posts' => $posts
         ]);

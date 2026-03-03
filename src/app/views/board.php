@@ -6,27 +6,34 @@ require __DIR__ . '/header.php';
 <div class="row align-items-center mb-4">
     <div class="col text-center">
         <h1 class="display-5 text-danger fw-bold">/<?php echo htmlspecialchars($board['shortname']); ?>/ - <?php echo htmlspecialchars($board['longname']); ?></h1>
+        <div class="mt-3">
+            <a href="/<?php echo htmlspecialchars($board['shortname']); ?>/catalog" class="btn btn-outline-secondary btn-sm">Catalog View</a>
+        </div>
     </div>
 </div>
 
 <!-- Submission Form -->
 <div class="row justify-content-center mb-5">
     <div class="col-md-8 col-lg-6">
-        <div class="card shadow-sm border-secondary bg-dark-subtle">
-            <div class="card-header bg-secondary text-white text-center fw-bold">
+        <div class="text-center mb-3">
+            <button class="btn btn-secondary fw-bold border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#newThreadForm" aria-expanded="false" aria-controls="newThreadForm">
                 Start a New Thread
-            </div>
-            <div class="card-body">
-                <form method="POST" enctype="multipart/form-data" action="/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
-                    <div class="mb-3">
-                        <label class="form-label text-light">Attach Image:</label>
-                        <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif">
-                    </div>
-                    <div class="mb-3">
-                        <textarea class="form-control bg-dark text-light border-secondary" name="content" rows="4" placeholder="What's on your mind?" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100 fw-bold">Post Thread</button>
-                </form>
+            </button>
+        </div>
+        <div class="collapse" id="newThreadForm">
+            <div class="card shadow-sm border-secondary bg-dark-subtle">
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" action="/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
+                        <div class="mb-3">
+                            <label class="form-label text-light fw-bold">Attach Image:</label>
+                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif">
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control bg-dark text-light border-secondary" name="content" rows="4" placeholder="What's on your mind?" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">Post Thread</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -45,9 +52,15 @@ require __DIR__ . '/header.php';
             <div class="card-body">
                 <!-- Thread Header -->
                 <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
-                    <span class="text-primary fw-bold">Anonymous</span> 
+                    <?php if (isset($thread['username']) && $thread['username'] !== null): ?>
+                        <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none">
+                            <span class="text-primary fw-bold"><?php echo htmlspecialchars($thread['username']); ?></span>
+                        </a>
+                    <?php else: ?>
+                        <span class="text-primary fw-bold">Anonymous</span> 
+                    <?php endif; ?>
                     <?php echo $thread['bumptimestamp']; ?> 
-                    <span class="ms-2">No. <strong><?php echo $thread['id']; ?></strong></span>
+                    <span class="ms-2">No. <strong><a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>"><?php echo $thread['id']; ?></a></strong></span>
                     <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="float-end text-decoration-none">[Reply]</a>
                 </div>
                 
@@ -67,6 +80,30 @@ require __DIR__ . '/header.php';
             </div>
         </div>
     <?php endforeach; ?>
+<?php endif; ?>
+
+<!-- Pagination -->
+<?php if ($totalPages > 1): ?>
+    <nav aria-label="Board pagination" class="mt-5 mb-4">
+        <ul class="pagination justify-content-center" data-bs-theme="dark">
+            <!-- Previous Button -->
+            <li class="page-item <?php echo ($currentPage <= 1) ? 'disabled' : ''; ?>">
+                <a class="page-link bg-dark text-light border-secondary" href="/<?php echo $board['shortname']; ?>/page/<?php echo $currentPage - 1; ?>">Previous</a>
+            </li>
+            
+            <!-- Page Numbers -->
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
+                    <a class="page-link <?php echo ($i === $currentPage) ? 'bg-secondary border-secondary text-white' : 'bg-dark text-light border-secondary'; ?>" href="/<?php echo $board['shortname']; ?>/page/<?php echo $i; ?>"><?php echo $i; ?></a>
+                </li>
+            <?php endfor; ?>
+            
+            <!-- Next Button -->
+            <li class="page-item <?php echo ($currentPage >= $totalPages) ? 'disabled' : ''; ?>">
+                <a class="page-link bg-dark text-light border-secondary" href="/<?php echo $board['shortname']; ?>/page/<?php echo $currentPage + 1; ?>">Next</a>
+            </li>
+        </ul>
+    </nav>
 <?php endif; ?>
 
 <?php require __DIR__ . '/footer.php'; ?>

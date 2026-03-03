@@ -25,5 +25,14 @@ class UserModel extends Model {
             'id' => $id
         ]);
     }
+    
+    public function updateProfile(int $id, ?string $pfpfilename, int $postasanon, ?string $bio = null) : bool {
+        return $this->update('UPDATE users SET pfpfilename = :pfpfilename, postasanon = :postasanon, bio = :bio WHERE id = :id', [
+            'pfpfilename' => $pfpfilename,
+            'postasanon' => $postasanon,
+            'bio' => $bio,
+            'id' => $id
+        ]) !== false;
+    }
 }
 ?>

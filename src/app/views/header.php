@@ -117,6 +117,7 @@
             <span class="navbar-text">
                 <?php if (isset($_SESSION['userid'])): ?>
                     Welcome, <strong class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></strong> | 
+                    <a href="/profile" class="text-decoration-none text-info fw-bold">[Profile]</a> | 
                     <a href="/logout" class="text-decoration-none text-danger fw-bold">[Logout]</a>
                 <?php else: ?>
                     <a href="/login" class="text-decoration-none">[Login]</a> | 
