@@ -37,6 +37,15 @@
             --bs-popover-arrow-bg: #0A0A0A;
         }
 
+        /* AMOLED Table Overrides */
+        .table-dark {
+            --bs-table-bg: #0A0A0A;
+            --bs-table-striped-bg: #111111;
+            --bs-table-active-bg: #1A1A1A;
+            --bs-table-hover-bg: #222222;
+            border-color: #333333 !important;
+        }
+
         .form-control, .form-control:focus {
             background-color: #1A1A1A !important;
             border-color: #444444 !important;
@@ -98,6 +107,12 @@
         hr.border-secondary {
             border-color: #333333 !important;
         }
+
+        /* AMC Nav Pills */
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            background-color: #333333 !important;
+            color: #FFFFFF !important;
+        }
     </style>
 
     <title><?php echo $title ?? 'BORD'; ?></title>
@@ -108,7 +123,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary mb-4 shadow-sm">
     <div class="container">
         <!-- Brand / Home Link -->
-        <a class="navbar-brand fw-bold" href="/">BORD</a>
+        <a class="navbar-brand fw-bold" href="/">BÖRD</a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -128,6 +143,9 @@
             <span class="navbar-text">
                 <?php if (isset($_SESSION['userid'])): ?>
                     Welcome, <strong class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></strong> | 
+                    <?php if (isset($_SESSION['role']) && (int)$_SESSION['role'] === 2): ?>
+                        <a href="/admin" class="text-decoration-none text-danger fw-bold">[Admin Panel]</a> | 
+                    <?php endif; ?>
                     <a href="/profile" class="text-decoration-none text-info fw-bold">[Profile]</a> | 
                     <a href="/logout" class="text-decoration-none text-danger fw-bold">[Logout]</a>
                 <?php else: ?>

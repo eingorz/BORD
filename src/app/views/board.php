@@ -76,7 +76,10 @@ require __DIR__ . '/header.php';
                 <!-- Thread Content (Flex Layout for Image + Text) -->
                 <div class="d-flex flex-column flex-md-row gap-3">
                     <?php if ($thread['attachment']): ?>
-                        <div class="flex-shrink-0">
+                        <div class="flex-shrink-0" style="max-width: 100%;">
+                            <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
+                                File: <a href="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($thread['attachment']); ?></a>
+                            </div>
                             <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>">
                                 <img src="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 250px; height: auto;" alt="Attachment">
                             </a>

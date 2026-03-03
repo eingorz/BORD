@@ -11,6 +11,16 @@ class BoardModel extends Model {
         ');
     }
 
+    public function getAllCategories() : array {
+        return $this->fetchAll('SELECT * FROM boardcategories ORDER BY id ASC');
+    }
+
+    public function createCategory(string $categoryname) : int|false {
+        return $this->insertAndGetId('INSERT INTO boardcategories (categoryname) VALUES (:categoryname)', [
+            'categoryname' => $categoryname
+        ]);
+    }
+
     public function getBoardById(int $id) : array | false {
         return $this->fetch('SELECT * FROM boards WHERE id = :id', [
             'id' => $id

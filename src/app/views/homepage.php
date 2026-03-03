@@ -10,25 +10,24 @@ require __DIR__ . '/header.php';
     </div>
 </div>
 
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 row-cols-xl-5 g-4 mb-5">
     <?php foreach ($categorizedBoards as $categoryName => $boards): ?>
         <div class="col">
-            <div class="card shadow-sm border-secondary bg-dark h-100">
+            <div class="card shadow-sm border-secondary bg-dark">
                 <div class="card-header bg-secondary bg-opacity-25 text-white fw-bold border-secondary fs-5 text-center">
                     <?php echo htmlspecialchars($categoryName); ?>
                 </div>
                 <div class="card-body bg-dark-subtle p-3">
-                    <div class="d-flex flex-column gap-3">
+                    <ul class="list-unstyled mb-0">
                         <?php foreach ($boards as $board): ?>
-                            <div class="card shadow-sm border-secondary bg-dark">
-                                <div class="card-body p-3">
-                                    <h3 class="card-title text-danger fs-5 mb-1">/<?php echo htmlspecialchars($board['shortname']); ?>/</h3>
-                                    <p class="card-text text-light small mb-2"><?php echo htmlspecialchars($board['longname']); ?></p>
-                                    <a href="/<?php echo htmlspecialchars($board['shortname']); ?>/" class="btn btn-outline-primary btn-sm w-100 stretched-link">Enter</a>
-                                </div>
-                            </div>
+                            <li class="mb-2 text-truncate">
+                                <a href="/<?php echo htmlspecialchars($board['shortname']); ?>/" class="text-decoration-none fw-bold" title="<?php echo htmlspecialchars($board['longname']); ?>">
+                                    <span class="text-danger">/<?php echo htmlspecialchars($board['shortname']); ?>/</span> 
+                                    <span class="text-light ms-1 small"><?php echo htmlspecialchars($board['longname']); ?></span>
+                                </a>
+                            </li>
                         <?php endforeach; ?>
-                    </div>
+                    </ul>
                 </div>
             </div>
         </div>

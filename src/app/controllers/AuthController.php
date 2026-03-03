@@ -49,6 +49,12 @@ class AuthController extends Controller {
                 
                 // Compare the plain text password hashed with MD5 against the stored hash
                 if ($user && $user['passwordhash'] === md5($password)) {
+                    if (isset($user['is_banned']) && $user['is_banned'] == 1) {
+                        $_SESSION['login_error'] = "This account has been permanently suspended.";
+                        $this->redirect('/login');
+                        return;
+                    }
+
                     // Populate session variables
                     $_SESSION['userid'] = $user['id'];
                     $_SESSION['username'] = $user['username'];

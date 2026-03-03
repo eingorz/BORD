@@ -62,7 +62,10 @@ require __DIR__ . '/header.php';
     <div class="card-body">
         <div class="d-flex flex-column flex-md-row gap-3">
             <?php if ($post['attachment']): ?>
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0" style="max-width: 100%;">
+                    <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
+                        File: <a href="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($post['attachment']); ?></a>
+                    </div>
                     <a href="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank">
                         <img src="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 300px; height: auto;" alt="Attachment">
                     </a>
@@ -109,7 +112,10 @@ require __DIR__ . '/header.php';
                     
                     <div class="d-flex flex-column flex-md-row gap-3 mt-2">
                         <?php if ($reply['attachment']): ?>
-                            <div class="flex-shrink-0">
+                            <div class="flex-shrink-0" style="max-width: 100%;">
+                                <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
+                                    File: <a href="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($reply['attachment']); ?></a>
+                                </div>
                                 <a href="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank">
                                     <img src="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 200px; height: auto;" alt="Attachment">
                                 </a>

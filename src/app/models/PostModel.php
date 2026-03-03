@@ -5,6 +5,26 @@ class PostModel extends Model {
         return $this->fetchAll('SELECT * FROM posts');
     }
 
+    public function getAllWithDetails() : array {
+        return $this->fetchAll('
+            SELECT posts.*, users.username, boards.shortname 
+            FROM posts 
+            LEFT JOIN users ON posts.userid = users.id 
+            LEFT JOIN boards ON posts.boardid = boards.id
+            ORDER BY posts.timestamp DESC
+        ');
+    }
+
+    public function getPostCountLastWeek() : array {
+        return $this->fetchAll('
+            SELECT DATE(timestamp) as post_date, COUNT(*) as post_count 
+            FROM posts 
+            WHERE timestamp >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            GROUP BY DATE(timestamp)
+            ORDER BY DATE(timestamp) ASC
+        ');
+    }
+
     public function getPostsByBoardId(int $boardid, int $limit = 10, int $offset = 0) : array {
         // Securely cast to int to prevent SQL injection since we are manually interpolating the LIMIT/OFFSET
         $limit = (int)$limit;
