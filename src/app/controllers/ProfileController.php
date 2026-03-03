@@ -36,6 +36,24 @@ class ProfileController extends Controller {
         ]);
     }
     
+    public function apiGetUser(string $username) : void {
+        header('Content-Type: application/json');
+        
+        $profileUser = $this->UserModel->getUserByUsername($username);
+        
+        if (!$profileUser) {
+            http_response_code(404);
+            echo json_encode(['error' => 'User not found']);
+            return;
+        }
+        
+        // Strip sensitive data before sending it out on the wire
+        unset($profileUser['passwordhash']);
+        unset($profileUser['e-mail']);
+        
+        echo json_encode($profileUser);
+    }
+    
     private function handleUpload(array $file) : ?string {
         if ($file['error'] !== UPLOAD_ERR_OK) return null;
         

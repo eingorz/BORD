@@ -52,24 +52,30 @@ require __DIR__ . '/header.php';
         <?php foreach ($posts as $thread): ?>
             <div class="col">
                 <div class="card h-100 shadow-sm border-secondary bg-dark-subtle text-center">
-                    <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="text-decoration-none text-light d-flex flex-column h-100">
-                        <div class="card-body p-2 d-flex flex-column align-items-center justify-content-start">
+                    <div class="card-body p-2 d-flex flex-column align-items-center justify-content-start text-light">
+                        <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="d-block w-100 mb-2">
                             <?php if ($thread['attachment']): ?>
-                                <img src="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid mb-2 border border-secondary" style="max-height: 250px; object-fit: contain;" alt="Attachment">
+                                <img src="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid" style="max-height: 250px; object-fit: contain;" alt="Attachment">
                             <?php else: ?>
-                                <div class="bg-secondary bg-opacity-25 border border-secondary d-flex align-items-center justify-content-center mb-2" style="width: 100%; height: 200px;">
+                                <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 100%; height: 200px;">
                                     <span class="text-muted small">No Image</span>
                                 </div>
                             <?php endif; ?>
-                            
-                            <div class="small w-100 overflow-hidden text-start" style="max-height: 4.5em;">
-                                <?php echo $thread['parsed_content']; ?>
-                            </div>
+                        </a>
+                        
+                        <div class="small w-100 overflow-hidden text-start" style="max-height: 4.5em;">
+                            <?php echo $thread['parsed_content']; ?>
                         </div>
-                        <div class="card-footer bg-secondary p-1 border-top border-secondary text-muted small">
-                            <?php echo htmlspecialchars($thread['username'] ?? 'Anonymous'); ?>
-                        </div>
-                    </a>
+                    </div>
+                    <div class="card-footer bg-dark p-1 text-muted small">
+                        <?php if (isset($thread['username']) && $thread['username'] !== null): ?>
+                            <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none profile-link text-primary fw-bold" data-username="<?php echo htmlspecialchars($thread['username']); ?>">
+                                <?php echo htmlspecialchars($thread['username']); ?>
+                            </a>
+                        <?php else: ?>
+                            <span class="fw-bold">Anonymous</span>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         <?php endforeach; ?>

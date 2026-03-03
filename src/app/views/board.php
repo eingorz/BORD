@@ -53,7 +53,7 @@ require __DIR__ . '/header.php';
                     <!-- Thread Header -->
                 <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
                     <?php if (isset($thread['username']) && $thread['username'] !== null): ?>
-                        <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none">
+                        <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($thread['username']); ?>">
                             <span class="text-primary fw-bold"><?php echo htmlspecialchars($thread['username']); ?></span>
                         </a>
                     <?php else: ?>
@@ -77,7 +77,7 @@ require __DIR__ . '/header.php';
                 <div class="d-flex flex-column flex-md-row gap-3">
                     <?php if ($thread['attachment']): ?>
                         <div class="flex-shrink-0">
-                            <a href="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" target="_blank">
+                            <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>">
                                 <img src="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 250px; height: auto;" alt="Attachment">
                             </a>
                         </div>

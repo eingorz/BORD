@@ -40,7 +40,7 @@ require __DIR__ . '/header.php';
 <div class="card border-primary mb-4 bg-dark shadow" id="post-<?php echo htmlspecialchars($post['id']); ?>">
     <div class="card-header bg-primary bg-opacity-25 text-light border-primary">
         <?php if (isset($post['username']) && $post['username'] !== null): ?>
-            <a href="/user/<?php echo urlencode($post['username']); ?>" class="text-decoration-none">
+            <a href="/user/<?php echo urlencode($post['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($post['username']); ?>">
                 <span class="text-primary fw-bold"><?php echo htmlspecialchars($post['username']); ?></span>
             </a>
         <?php else: ?>
@@ -87,7 +87,7 @@ require __DIR__ . '/header.php';
                 <div class="card-body py-2">
                     <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
                         <?php if (isset($reply['username']) && $reply['username'] !== null): ?>
-                            <a href="/user/<?php echo urlencode($reply['username']); ?>" class="text-decoration-none">
+                            <a href="/user/<?php echo urlencode($reply['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($reply['username']); ?>">
                                 <span class="text-info fw-bold"><?php echo htmlspecialchars($reply['username']); ?></span>
                             </a>
                         <?php else: ?>

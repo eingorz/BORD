@@ -25,6 +25,17 @@
             background-color: #111111 !important; /* Slightly elevated black */
             border-color: #333333 !important;
         }
+        
+        /* Popover AMOLED Overrides (Using native Bootstrap 5 variables to preserve arrow geometry) */
+        .popover {
+            --bs-popover-bg: #0A0A0A;
+            --bs-popover-border-color: #333333;
+            --bs-popover-header-bg: #111111;
+            --bs-popover-header-color: #E0E0E0;
+            --bs-popover-body-color: #E0E0E0;
+            --bs-popover-arrow-border: #333333;
+            --bs-popover-arrow-bg: #0A0A0A;
+        }
 
         .form-control, .form-control:focus {
             background-color: #1A1A1A !important;

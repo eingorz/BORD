@@ -28,6 +28,7 @@ $router->addRoute('GET', '/logout', 'AuthController', 'logout');
 $router->addRoute('GET', '/profile', 'ProfileController', 'showProfile');
 $router->addRoute('POST', '/profile/update', 'ProfileController', 'updateProfile');
 $router->addRoute('GET', '/user/{username}', 'ProfileController', 'showUser');
+$router->addRoute('GET', '/api/user/{username}', 'ProfileController', 'apiGetUser');
 
 $router->addRoute('GET', '/{shortname}', 'BoardController', 'showBoard');
 $router->addRoute('GET', '/{shortname}/page/{page}', 'BoardController', 'showBoard');
