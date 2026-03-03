@@ -75,6 +75,65 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     });
+
+    // --- Image Hover Preview Plugin ---
+    const previewContainer = document.createElement('div');
+    previewContainer.id = 'image-hover-preview';
+    previewContainer.style.position = 'fixed';
+    previewContainer.style.display = 'none';
+    previewContainer.style.zIndex = '9999';
+    previewContainer.style.pointerEvents = 'none';
+    
+    const previewImg = document.createElement('img');
+    // Ensure image does not exceed viewport bounds
+    previewImg.style.maxWidth = (window.innerWidth - 40) + 'px';
+    previewImg.style.maxHeight = (window.innerHeight - 40) + 'px';
+    previewImg.style.objectFit = 'contain';
+    previewImg.style.border = '2px solid #555';
+    previewImg.style.backgroundColor = '#111';
+    previewImg.className = 'shadow-lg rounded';
+    
+    previewContainer.appendChild(previewImg);
+    document.body.appendChild(previewContainer);
+
+    // Update max bounds on resize
+    window.addEventListener('resize', () => {
+        previewImg.style.maxWidth = (window.innerWidth - 40) + 'px';
+        previewImg.style.maxHeight = (window.innerHeight - 40) + 'px';
+    });
+
+    document.querySelectorAll('.img-thumbnail').forEach(img => {
+        img.addEventListener('mouseenter', function () {
+            previewImg.src = this.src;
+            previewContainer.style.display = 'block';
+        });
+
+        img.addEventListener('mousemove', function (e) {
+            const offset = 20;
+            let x = e.clientX + offset;
+            let y = e.clientY + offset;
+
+            // Dynamically shrink the image's max-width so it ALWAYS stays to the right of the cursor
+            // without overflowing the right side of the browser viewport.
+            let availableWidth = window.innerWidth - x - 20;
+            previewImg.style.maxWidth = availableWidth + 'px';
+
+            // Vertical collision detection (flip above cursor if it overflows the bottom)
+            if (y + previewContainer.offsetHeight > window.innerHeight) {
+                y = Math.max(0, e.clientY - previewContainer.offsetHeight - offset);
+            }
+
+            previewContainer.style.left = x + 'px';
+            previewContainer.style.top = y + 'px';
+        });
+
+        img.addEventListener('mouseleave', function () {
+            previewContainer.style.display = 'none';
+            previewImg.src = '';
+            // Reset to default on leave
+            previewImg.style.maxWidth = (window.innerWidth - 40) + 'px';
+        });
+    });
 });
 </script>
 </body>
