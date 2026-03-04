@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Europe/Prague');
 class Database {
     private string $dsn;
     private string $user;
