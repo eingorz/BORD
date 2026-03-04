@@ -123,7 +123,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-secondary mb-4 shadow-sm">
     <div class="container">
         <!-- Brand / Home Link -->
-        <a class="navbar-brand fw-bold" href="/">BÖRD</a>
+        <a class="navbar-brand fw-bold" href="<?= BASE_URL ?>/">BÖRD</a>
         
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -132,7 +132,7 @@
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">[Home]</a>
+                    <a class="nav-link" href="<?= BASE_URL ?>/">[Home]</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:history.back()">[Back]</a>
@@ -144,13 +144,13 @@
                 <?php if (isset($_SESSION['userid'])): ?>
                     Welcome, <strong class="text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></strong> | 
                     <?php if (isset($_SESSION['role']) && (int)$_SESSION['role'] === 2): ?>
-                        <a href="/admin" class="text-decoration-none text-danger fw-bold">[Admin Panel]</a> | 
+                        <a href="<?= BASE_URL ?>/admin" class="text-decoration-none text-danger fw-bold">[Admin Panel]</a> | 
                     <?php endif; ?>
-                    <a href="/profile" class="text-decoration-none text-info fw-bold">[Profile]</a> | 
-                    <a href="/logout" class="text-decoration-none text-danger fw-bold">[Logout]</a>
+                    <a href="<?= BASE_URL ?>/profile" class="text-decoration-none text-info fw-bold">[Profile]</a> | 
+                    <a href="<?= BASE_URL ?>/logout" class="text-decoration-none text-danger fw-bold">[Logout]</a>
                 <?php else: ?>
-                    <a href="/login" class="text-decoration-none">[Login]</a> | 
-                    <a href="/register" class="text-decoration-none">[Register]</a>
+                    <a href="<?= BASE_URL ?>/login" class="text-decoration-none">[Login]</a> | 
+                    <a href="<?= BASE_URL ?>/register" class="text-decoration-none">[Register]</a>
                 <?php endif; ?>
             </span>
         </div>

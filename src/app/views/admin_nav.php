@@ -7,15 +7,15 @@
 
 <ul class="nav nav-pills mb-4 border-bottom border-secondary pb-3">
     <li class="nav-item">
-        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === '/admin') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="/admin">Dashboard Overview</a>
+        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === BASE_URL . '/admin') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="<?= BASE_URL ?>/admin">Dashboard Overview</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === '/admin/boards') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="/admin/boards">Boards Manager</a>
+        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === BASE_URL . '/admin/boards') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="<?= BASE_URL ?>/admin/boards">Boards Manager</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === '/admin/users') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="/admin/users">Users & Bans</a>
+        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === BASE_URL . '/admin/users') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="<?= BASE_URL ?>/admin/users">Users & Bans</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === '/admin/posts') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="/admin/posts">Global Posts Tracker</a>
+        <a class="nav-link <?php echo ($_SERVER['REQUEST_URI'] === BASE_URL . '/admin/posts') ? 'active text-light fw-bold' : 'text-primary'; ?>" href="<?= BASE_URL ?>/admin/posts">Global Posts Tracker</a>
     </li>
 </ul>

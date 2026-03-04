@@ -3,9 +3,11 @@
 class Router {
     private array $routes = [];
     private PDO $db;
+    private string $basePath;
 
-    public function __construct(PDO $db) {
+    public function __construct(PDO $db, string $basePath = '') {
         $this->db = $db;
+        $this->basePath = rtrim($basePath, '/');
     }
 
     public function addRoute(string $method, string $path, string $controller, string $action): void {
@@ -23,8 +25,20 @@ class Router {
     }
 
     public function dispatch(string $method, string $path): void {
-        // Strip query string and decode URL to handle spaces, +, and diacritics correctly
-        $path = urldecode(parse_url($path, PHP_URL_PATH) ?? '');
+        // Parse the URL to get the path without query strings
+        $parsedUrl = parse_url($path);
+        // Decode the path component to handle spaces/diacritics
+        $path = urldecode($parsedUrl['path'] ?? '');
+
+        // Remove base path to allow subdirectory installations or flexible virtualhosts
+        // Make sure we are matching exactly at the start
+        if ($this->basePath !== '' && str_starts_with($path, $this->basePath)) {
+            $path = substr($path, strlen($this->basePath));
+        }
+
+        if ($path === '' || $path === false) {
+            $path = '/';
+        }
 
         if ($path !== '/') {
             $path = rtrim($path, '/');

@@ -12,7 +12,7 @@ require __DIR__ . '/admin_nav.php';
                 Create New Board
             </div>
             <div class="card-body">
-                <form method="POST" action="/admin/board/new">
+                <form method="POST" action="<?= BASE_URL ?>/admin/board/new">
                     <div class="mb-3">
                         <label class="form-label text-light fw-bold">Short Name (/v/, /b/)</label>
                         <input type="text" class="form-control bg-dark text-light border-secondary" name="shortname" maxlength="6" required placeholder="e.g. wg">
@@ -39,7 +39,7 @@ require __DIR__ . '/admin_nav.php';
                 Create New Category
             </div>
             <div class="card-body">
-                <form method="POST" action="/admin/category/new">
+                <form method="POST" action="<?= BASE_URL ?>/admin/category/new">
                     <div class="mb-3">
                         <label class="form-label text-light fw-bold">Category Name</label>
                         <input type="text" class="form-control bg-dark text-light border-secondary" name="categoryname" maxlength="32" required placeholder="e.g. Video Games">
@@ -76,7 +76,7 @@ require __DIR__ . '/admin_nav.php';
                                     <td class="align-middle"><?php echo htmlspecialchars($b['longname']); ?></td>
                                     <td class="align-middle text-info"><?php echo htmlspecialchars($b['category_name'] ?? 'Unknown'); ?></td>
                                     <td class="align-middle text-end">
-                                        <a href="/<?php echo htmlspecialchars($b['shortname']); ?>/" class="btn btn-sm btn-outline-secondary" target="_blank">View</a>
+                                        <a href="<?= BASE_URL ?>/<?php echo htmlspecialchars($b['shortname']); ?>/" class="btn btn-sm btn-outline-secondary" target="_blank">View</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

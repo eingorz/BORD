@@ -7,7 +7,7 @@ require __DIR__ . '/header.php';
     <div class="col-md-6 col-lg-4">
         
         <div class="mb-4 text-center">
-            <a href="/" class="btn btn-outline-secondary btn-sm">&larr; Return Home</a>
+            <a href="<?= BASE_URL ?>/" class="btn btn-outline-secondary btn-sm">&larr; Return Home</a>
         </div>
 
         <div class="card shadow border-secondary bg-dark-subtle text-center">
@@ -20,7 +20,7 @@ require __DIR__ . '/header.php';
             <div class="card-body py-5">
                 
                 <?php if ($profileUser['pfpfilename']): ?>
-                    <img src="/public/uploads/<?php echo htmlspecialchars($profileUser['pfpfilename']); ?>" class="rounded-circle border border-secondary shadow-sm mb-4" style="width: 180px; height: 180px; object-fit: cover;" alt="Profile Picture">
+                    <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($profileUser['pfpfilename']); ?>" class="rounded-circle border border-secondary shadow-sm mb-4" style="width: 180px; height: 180px; object-fit: cover;" alt="Profile Picture">
                 <?php else: ?>
                     <div class="mx-auto rounded-circle bg-secondary bg-opacity-25 border border-secondary shadow-sm d-flex align-items-center justify-content-center mb-4" style="width: 180px; height: 180px;">
                         <span class="text-muted" style="font-size: 5rem;">?</span>

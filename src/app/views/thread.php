@@ -4,7 +4,7 @@ require __DIR__ . '/header.php';
 ?>
 
 <div class="mb-4">
-    <a href="/<?php echo htmlspecialchars($shortname); ?>/" class="btn btn-outline-secondary btn-sm">&larr; Return to /<?php echo htmlspecialchars($shortname); ?>/</a>
+    <a href="<?= BASE_URL ?>/<?php echo htmlspecialchars($shortname); ?>/" class="btn btn-outline-secondary btn-sm">&larr; Return to /<?php echo htmlspecialchars($shortname); ?>/</a>
 </div>
 
 <!-- Reply Form -->
@@ -18,7 +18,7 @@ require __DIR__ . '/header.php';
         <div class="collapse" id="newReplyForm">
             <div class="card shadow-sm border-secondary bg-dark-subtle">
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data" action="/<?php echo htmlspecialchars($shortname); ?>/thread/<?php echo $post['id']; ?>/reply">
+                    <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>/<?php echo htmlspecialchars($shortname); ?>/thread/<?php echo $post['id']; ?>/reply">
                         <div class="mb-3">
                             <label class="form-label text-light fw-bold">Attach Image:</label>
                             <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif" id="replyAttachmentInput">
@@ -43,7 +43,7 @@ require __DIR__ . '/header.php';
 <div class="card border-primary mb-4 bg-dark shadow" id="post-<?php echo htmlspecialchars($post['id']); ?>">
     <div class="card-header bg-primary bg-opacity-25 text-light border-primary">
         <?php if (isset($post['username']) && $post['username'] !== null): ?>
-            <a href="/user/<?php echo urlencode($post['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($post['username']); ?>">
+            <a href="<?= BASE_URL ?>/user/<?php echo urlencode($post['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($post['username']); ?>">
                 <span class="text-primary fw-bold"><?php echo htmlspecialchars($post['username']); ?></span>
             </a>
         <?php else: ?>
@@ -56,7 +56,7 @@ require __DIR__ . '/header.php';
         $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] == 2;
         if ($isAuthor || $isAdmin):
         ?>
-            <form id="delete-op-<?php echo $post['id']; ?>" method="POST" action="/<?php echo $shortname; ?>/post/<?php echo $post['id']; ?>/delete" class="d-none"></form>
+            <form id="delete-op-<?php echo $post['id']; ?>" method="POST" action="<?= BASE_URL ?>/<?php echo $shortname; ?>/post/<?php echo $post['id']; ?>/delete" class="d-none"></form>
             <a href="#" class="float-end text-danger text-decoration-none ms-2" onclick="if(confirm('Delete this thread? This cannot be undone.')) document.getElementById('delete-op-<?php echo $post['id']; ?>').submit(); return false;">[Delete]</a>
         <?php endif; ?>
         
@@ -67,10 +67,10 @@ require __DIR__ . '/header.php';
             <?php if ($post['attachment']): ?>
                 <div class="flex-shrink-0" style="max-width: 100%;">
                     <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
-                        File: <a href="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($post['attachment']); ?></a>
+                        File: <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($post['attachment']); ?></a>
                     </div>
-                    <a href="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank">
-                        <img src="/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 300px; height: auto;" alt="Attachment">
+                    <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank">
+                        <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 300px; height: auto;" alt="Attachment">
                     </a>
                 </div>
             <?php endif; ?>
@@ -93,7 +93,7 @@ require __DIR__ . '/header.php';
                 <div class="card-body py-2">
                     <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
                         <?php if (isset($reply['username']) && $reply['username'] !== null): ?>
-                            <a href="/user/<?php echo urlencode($reply['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($reply['username']); ?>">
+                            <a href="<?= BASE_URL ?>/user/<?php echo urlencode($reply['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($reply['username']); ?>">
                                 <span class="text-info fw-bold"><?php echo htmlspecialchars($reply['username']); ?></span>
                             </a>
                         <?php else: ?>
@@ -106,7 +106,7 @@ require __DIR__ . '/header.php';
                         $isAdmin = isset($_SESSION['role']) && $_SESSION['role'] == 2;
                         if ($isAuthor || $isAdmin):
                         ?>
-                            <form id="delete-reply-<?php echo $reply['id']; ?>" method="POST" action="/<?php echo $shortname; ?>/post/<?php echo $reply['id']; ?>/delete" class="d-none"></form>
+                            <form id="delete-reply-<?php echo $reply['id']; ?>" method="POST" action="<?= BASE_URL ?>/<?php echo $shortname; ?>/post/<?php echo $reply['id']; ?>/delete" class="d-none"></form>
                             <a href="#" class="float-end text-danger text-decoration-none ms-2" onclick="if(confirm('Delete this reply? This cannot be undone.')) document.getElementById('delete-reply-<?php echo $reply['id']; ?>').submit(); return false;">[Delete]</a>
                         <?php endif; ?>
                         
@@ -117,10 +117,10 @@ require __DIR__ . '/header.php';
                         <?php if ($reply['attachment']): ?>
                             <div class="flex-shrink-0" style="max-width: 100%;">
                                 <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
-                                    File: <a href="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($reply['attachment']); ?></a>
+                                    File: <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($reply['attachment']); ?></a>
                                 </div>
-                                <a href="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank">
-                                    <img src="/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 200px; height: auto;" alt="Attachment">
+                                <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank">
+                                    <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 200px; height: auto;" alt="Attachment">
                                 </a>
                             </div>
                         <?php endif; ?>

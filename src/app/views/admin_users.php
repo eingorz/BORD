@@ -29,7 +29,7 @@ require __DIR__ . '/admin_nav.php';
                                 <tr>
                                     <td class="align-middle"><?php echo $u['id']; ?></td>
                                     <td class="align-middle fw-bold text-primary">
-                                        <a href="/user/<?php echo urlencode($u['username']); ?>" class="text-decoration-none profile-link text-primary" data-username="<?php echo htmlspecialchars($u['username']); ?>">
+                                        <a href="<?= BASE_URL ?>/user/<?php echo urlencode($u['username']); ?>" class="text-decoration-none profile-link text-primary" data-username="<?php echo htmlspecialchars($u['username']); ?>">
                                             <?php echo htmlspecialchars($u['username']); ?>
                                         </a>
                                     </td>
@@ -50,7 +50,7 @@ require __DIR__ . '/admin_nav.php';
                                     </td>
                                     <td class="align-middle text-end">
                                         <?php if ((int)$u['id'] !== (int)$_SESSION['userid']): ?>
-                                            <form method="POST" action="/admin/user/<?php echo $u['id']; ?>/ban" class="m-0 p-0" onsubmit="return confirm('Toggle suspension for <?php echo htmlspecialchars($u['username']); ?>?');">
+                                            <form method="POST" action="<?= BASE_URL ?>/admin/user/<?php echo $u['id']; ?>/ban" class="m-0 p-0" onsubmit="return confirm('Toggle suspension for <?php echo htmlspecialchars($u['username']); ?>?');">
                                                 <button type="submit" class="btn btn-sm <?php echo (isset($u['is_banned']) && $u['is_banned'] == 1) ? 'btn-outline-success' : 'btn-outline-danger'; ?>">
                                                     <?php echo (isset($u['is_banned']) && $u['is_banned'] == 1) ? 'Unban' : 'Ban'; ?>
                                                 </button>

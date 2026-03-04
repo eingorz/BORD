@@ -21,7 +21,7 @@ require __DIR__ . '/header.php';
                     <ul class="list-unstyled mb-0">
                         <?php foreach ($boards as $board): ?>
                             <li class="mb-2 text-truncate">
-                                <a href="/<?php echo htmlspecialchars($board['shortname']); ?>/" class="text-decoration-none fw-bold" title="<?php echo htmlspecialchars($board['longname']); ?>">
+                                <a href="<?= BASE_URL ?>/<?php echo htmlspecialchars($board['shortname']); ?>/" class="text-decoration-none fw-bold" title="<?php echo htmlspecialchars($board['longname']); ?>">
                                     <span class="text-danger">/<?php echo htmlspecialchars($board['shortname']); ?>/</span> 
                                     <span class="text-light ms-1 small"><?php echo htmlspecialchars($board['longname']); ?></span>
                                 </a>

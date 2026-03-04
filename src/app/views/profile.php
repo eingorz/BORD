@@ -12,13 +12,13 @@ require __DIR__ . '/header.php';
                 <?php echo htmlspecialchars($user['username']); ?>
             </div>
             <div class="card-body">
-                <form method="POST" action="/profile/update" enctype="multipart/form-data">
+                <form method="POST" action="<?= BASE_URL ?>/profile/update" enctype="multipart/form-data">
                     
                     <!-- PFP Section -->
                     <div class="mb-4 text-center">
                         <?php if ($user['pfpfilename']): ?>
                             <div class="mb-3">
-                                <img src="/public/uploads/<?php echo htmlspecialchars($user['pfpfilename']); ?>" class="rounded-circle border border-secondary" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
+                                <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($user['pfpfilename']); ?>" class="rounded-circle border border-secondary" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
                             </div>
                             <div class="form-check form-switch d-flex justify-content-center mb-3">
                                 <input class="form-check-input me-2" type="checkbox" role="switch" id="remove_pfp" name="remove_pfp" value="1">

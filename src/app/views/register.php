@@ -10,7 +10,7 @@ require __DIR__ . '/header.php';
                 <h2>Register</h2>
             </div>
             <div class="card-body">
-                <form method="POST" action="/register">
+                <form method="POST" action="<?= BASE_URL ?>/register">
                     <div class="mb-3">
                         <label class="form-label">Username:</label>
                         <input type="text" class="form-control bg-dark-subtle text-light border-secondary" name="username" required maxlength="32">
@@ -29,7 +29,7 @@ require __DIR__ . '/header.php';
                     <button type="submit" class="btn btn-success w-100 fw-bold">Create Account</button>
                     
                     <div class="mt-3 text-center">
-                        <small class="text-muted">Already have an account? <a href="/login" class="text-info">Login</a></small>
+                        <small class="text-muted">Already have an account? <a href="<?= BASE_URL ?>/login" class="text-info">Login</a></small>
                     </div>
                 </form>
             </div>

@@ -33,7 +33,7 @@ require __DIR__ . '/admin_nav.php';
                                     
                                     <td class="align-middle fw-bold">
                                         <?php if ($p['username']): ?>
-                                            <a href="/user/<?php echo urlencode($p['username']); ?>" class="text-decoration-none profile-link text-primary" data-username="<?php echo htmlspecialchars($p['username']); ?>">
+                                            <a href="<?= BASE_URL ?>/user/<?php echo urlencode($p['username']); ?>" class="text-decoration-none profile-link text-primary" data-username="<?php echo htmlspecialchars($p['username']); ?>">
                                                 <?php echo htmlspecialchars($p['username']); ?>
                                             </a>
                                         <?php else: ?>
@@ -43,7 +43,7 @@ require __DIR__ . '/admin_nav.php';
 
                                     <td class="align-middle text-muted text-center" style="width: 100px;">
                                         <?php if ($p['attachment']): ?>
-                                            <a href="/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" target="_blank" class="text-muted text-decoration-none">[View]</a>
+                                            <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" target="_blank" class="text-muted text-decoration-none">[View]</a>
                                         <?php else: ?>
                                             <span class="opacity-50">None</span>
                                         <?php endif; ?>
@@ -57,8 +57,8 @@ require __DIR__ . '/admin_nav.php';
                                     
                                     <td class="align-middle text-end">
                                         <div class="d-flex justify-content-end">
-                                            <a href="/<?php echo htmlspecialchars($p['shortname']); ?>/thread/<?php echo $p['parentid'] ?? $p['id']; ?>#post-<?php echo $p['id']; ?>" class="btn btn-sm btn-outline-secondary me-2" target="_blank">View Post</a>
-                                            <form method="POST" action="/admin/post/<?php echo $p['id']; ?>/delete" class="m-0 p-0" onsubmit="return confirm('Permanently scrub post #<?php echo $p['id']; ?> from the database? This cannot be undone.');">
+                                            <a href="<?= BASE_URL ?>/<?php echo htmlspecialchars($p['shortname']); ?>/thread/<?php echo $p['parentid'] ?? $p['id']; ?>#post-<?php echo $p['id']; ?>" class="btn btn-sm btn-outline-secondary me-2" target="_blank">View Post</a>
+                                            <form method="POST" action="<?= BASE_URL ?>/admin/post/<?php echo $p['id']; ?>/delete" class="m-0 p-0" onsubmit="return confirm('Permanently scrub post #<?php echo $p['id']; ?> from the database? This cannot be undone.');">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">Scrub</button>
                                             </form>
                                         </div>

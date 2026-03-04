@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(user => {
                     const roleBadge = user.role == 2 ? '<span class="badge bg-danger mt-1">Admin</span>' : '<span class="badge bg-primary mt-1">User</span>';
                     const pfpHtml = user.pfpfilename 
-                        ? `<img src="/public/uploads/${user.pfpfilename}" class="rounded-circle border border-secondary shadow-sm mb-2" style="width: 80px; height: 80px; object-fit: cover;">` 
+                        ? `<img src="<?= BASE_URL ?>/public/uploads/${user.pfpfilename}" class="rounded-circle border border-secondary shadow-sm mb-2" style="width: 80px; height: 80px; object-fit: cover;">` 
                         : getFallbackImg();
                     const bioText = user.bio ? `<div class="small text-light mt-2 text-start" style="white-space: pre-wrap; max-height: 100px; overflow-y: auto;">${user.bio}</div>` : '';
                     

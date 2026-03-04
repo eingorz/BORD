@@ -8,7 +8,7 @@ require __DIR__ . '/header.php';
         <h1 class="display-5 text-danger fw-bold">/<?php echo htmlspecialchars($board['shortname']); ?>/ - Catalog</h1>
         <p class="text-muted"><?php echo htmlspecialchars($board['longname']); ?></p>
         <div class="mt-3">
-            <a href="/<?php echo htmlspecialchars($board['shortname']); ?>/" class="btn btn-outline-secondary btn-sm">Index View</a>
+            <a href="<?= BASE_URL ?>/<?php echo htmlspecialchars($board['shortname']); ?>/" class="btn btn-outline-secondary btn-sm">Index View</a>
         </div>
     </div>
 </div>
@@ -24,7 +24,7 @@ require __DIR__ . '/header.php';
         <div class="collapse" id="newThreadForm">
             <div class="card shadow-sm border-secondary bg-dark-subtle">
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data" action="/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
+                    <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
                         <div class="mb-3">
                             <label class="form-label text-light fw-bold">Attach Image:</label>
                             <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif">
@@ -53,9 +53,9 @@ require __DIR__ . '/header.php';
             <div class="col">
                 <div class="card h-100 shadow-sm border-secondary bg-dark-subtle text-center">
                     <div class="card-body p-2 d-flex flex-column align-items-center justify-content-start text-light">
-                        <a href="/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="d-block w-100 mb-2">
+                        <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="d-block w-100 mb-2">
                             <?php if ($thread['attachment']): ?>
-                                <img src="/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid" style="max-height: 250px; object-fit: contain;" alt="Attachment">
+                                <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid" style="max-height: 250px; object-fit: contain;" alt="Attachment">
                             <?php else: ?>
                                 <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 100%; height: 200px;">
                                     <span class="text-muted small">No Image</span>
@@ -69,7 +69,7 @@ require __DIR__ . '/header.php';
                     </div>
                     <div class="card-footer bg-dark p-1 text-muted small">
                         <?php if (isset($thread['username']) && $thread['username'] !== null): ?>
-                            <a href="/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none profile-link text-primary fw-bold" data-username="<?php echo htmlspecialchars($thread['username']); ?>">
+                            <a href="<?= BASE_URL ?>/user/<?php echo urlencode($thread['username']); ?>" class="text-decoration-none profile-link text-primary fw-bold" data-username="<?php echo htmlspecialchars($thread['username']); ?>">
                                 <?php echo htmlspecialchars($thread['username']); ?>
                             </a>
                         <?php else: ?>
