@@ -134,6 +134,33 @@ document.addEventListener('DOMContentLoaded', function () {
             previewImg.style.maxWidth = (window.innerWidth - 40) + 'px';
         });
     });
+
+    // --- Image Upload Preview ---
+    const setupImagePreview = (inputId, containerId, imgId) => {
+        const input = document.getElementById(inputId);
+        const container = document.getElementById(containerId);
+        const img = document.getElementById(imgId);
+        
+        if (input && container && img) {
+            input.addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        img.src = e.target.result;
+                        container.classList.remove('d-none');
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    img.src = '';
+                    container.classList.add('d-none');
+                }
+            });
+        }
+    };
+    
+    setupImagePreview('boardAttachmentInput', 'boardImagePreviewContainer', 'boardImagePreview');
+    setupImagePreview('replyAttachmentInput', 'replyImagePreviewContainer', 'replyImagePreview');
 });
 </script>
 </body>

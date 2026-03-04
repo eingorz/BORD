@@ -26,7 +26,10 @@ require __DIR__ . '/header.php';
                     <form method="POST" enctype="multipart/form-data" action="/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
                         <div class="mb-3">
                             <label class="form-label text-light fw-bold">Attach Image:</label>
-                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif">
+                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif" id="boardAttachmentInput">
+                            <div class="mt-3 d-none text-center" id="boardImagePreviewContainer">
+                                <img id="boardImagePreview" src="" class="img-thumbnail bg-dark border-secondary" style="max-height: 200px;" alt="Image Preview">
+                            </div>
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control bg-dark text-light border-secondary" name="content" rows="4" placeholder="What's on your mind?" required></textarea>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('Europe/Prague');
 $config = require __DIR__ .'/config/database.php';
 require_once __DIR__ .'/app/core/Database.php';
 require_once __DIR__ .'/app/core/Router.php';
