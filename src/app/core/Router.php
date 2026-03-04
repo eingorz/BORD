@@ -10,7 +10,8 @@ class Router {
 
     public function addRoute(string $method, string $path, string $controller, string $action): void {
         // Transform {slugs} into regex named capturing groups for dynamic routing
-        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<\1>[a-zA-Z0-9_-]+)', $path);
+        // Match any character except slashes for the parameter to allow diacritics and spaces
+        $pattern = preg_replace('/\{([a-zA-Z0-9_]+)\}/', '(?P<\1>[^/]+)', $path);
         
         // Wrap with delimiters; make trailing slashes optional
         $pattern = '#^' . rtrim($pattern, '/') . '/?$#';
@@ -22,6 +23,9 @@ class Router {
     }
 
     public function dispatch(string $method, string $path): void {
+        // Strip query string and decode URL to handle spaces, +, and diacritics correctly
+        $path = urldecode(parse_url($path, PHP_URL_PATH) ?? '');
+
         if ($path !== '/') {
             $path = rtrim($path, '/');
         }
