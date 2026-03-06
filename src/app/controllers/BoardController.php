@@ -177,8 +177,25 @@ class BoardController extends Controller {
                     $userid = $_SESSION['userid'] ?? null;
                     $attachment = null;
                     
-                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-                        $attachment = $this->handleUpload($_FILES['attachment']);
+                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] !== UPLOAD_ERR_NO_FILE) {
+                        if ($_FILES['attachment']['error'] === UPLOAD_ERR_INI_SIZE || $_FILES['attachment']['error'] === UPLOAD_ERR_FORM_SIZE || $_FILES['attachment']['size'] > 10485760) {
+                            $_SESSION['upload_error'] = "File is too large. Maximum size is 10MB.";
+                            $this->redirect('/' . $shortname . '/');
+                            return;
+                        }
+
+                        if ($_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+                            $attachment = $this->handleUpload($_FILES['attachment']);
+                            if (!$attachment) {
+                                $_SESSION['upload_error'] = "Failed to upload image. Invalid format or corrupted.";
+                                $this->redirect('/' . $shortname . '/');
+                                return;
+                            }
+                        } else {
+                            $_SESSION['upload_error'] = "An error occurred during file upload.";
+                            $this->redirect('/' . $shortname . '/');
+                            return;
+                        }
                     }
                     
                     $this->PostModel->createPost($board['id'], $userid, $_POST['content'], null, $attachment);
@@ -198,8 +215,25 @@ class BoardController extends Controller {
                     $userid = $_SESSION['userid'] ?? null;
                     $attachment = null;
                     
-                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
-                        $attachment = $this->handleUpload($_FILES['attachment']);
+                    if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] !== UPLOAD_ERR_NO_FILE) {
+                        if ($_FILES['attachment']['error'] === UPLOAD_ERR_INI_SIZE || $_FILES['attachment']['error'] === UPLOAD_ERR_FORM_SIZE || $_FILES['attachment']['size'] > 10485760) {
+                            $_SESSION['upload_error'] = "File is too large. Maximum size is 10MB.";
+                            $this->redirect('/' . $shortname . '/thread/' . $id);
+                            return;
+                        }
+
+                        if ($_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
+                            $attachment = $this->handleUpload($_FILES['attachment']);
+                            if (!$attachment) {
+                                $_SESSION['upload_error'] = "Failed to upload image. Invalid format or corrupted.";
+                                $this->redirect('/' . $shortname . '/thread/' . $id);
+                                return;
+                            }
+                        } else {
+                            $_SESSION['upload_error'] = "An error occurred during file upload.";
+                            $this->redirect('/' . $shortname . '/thread/' . $id);
+                            return;
+                        }
                     }
                     
                     $this->PostModel->createPost($board['id'], $userid, $_POST['content'], (int)$id, $attachment);

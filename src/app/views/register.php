@@ -10,6 +10,11 @@ require __DIR__ . '/header.php';
                 <h2>Register</h2>
             </div>
             <div class="card-body">
+                <?php if (isset($_SESSION['register_error'])): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo htmlspecialchars($_SESSION['register_error']); unset($_SESSION['register_error']); ?>
+                    </div>
+                <?php endif; ?>
                 <form method="POST" action="<?= BASE_URL ?>/register">
                     <div class="mb-3">
                         <label class="form-label">Username:</label>
@@ -23,7 +28,8 @@ require __DIR__ . '/header.php';
                     
                     <div class="mb-4">
                         <label class="form-label">Password:</label>
-                        <input type="password" class="form-control bg-dark-subtle text-light border-secondary" name="password" required>
+                        <input type="password" class="form-control bg-dark-subtle text-light border-secondary" name="password" required minlength="8" pattern="(?=.*\d)(?=.*[^a-zA-Z\d]).{8,}">
+                        <div class="form-text text-muted">Must be at least 8 characters, include 1 number, and 1 special character.</div>
                     </div>
                     
                     <button type="submit" class="btn btn-success w-100 fw-bold">Create Account</button>

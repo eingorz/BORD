@@ -18,10 +18,21 @@ require __DIR__ . '/header.php';
         <div class="collapse" id="newReplyForm">
             <div class="card shadow-sm border-secondary bg-dark-subtle">
                 <div class="card-body">
+                    <?php if (isset($_SESSION['upload_error'])): ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?php echo htmlspecialchars($_SESSION['upload_error']); unset($_SESSION['upload_error']); ?>
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                bootstrap.Collapse.getOrCreateInstance(document.getElementById('newReplyForm')).show();
+                            });
+                        </script>
+                    <?php endif; ?>
                     <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>/<?php echo htmlspecialchars($shortname); ?>/thread/<?php echo $post['id']; ?>/reply">
                         <div class="mb-3">
                             <label class="form-label text-light fw-bold">Attach Image:</label>
-                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif" id="replyAttachmentInput">
+                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif" id="replyAttachmentInput" onchange="if(this.files[0] && this.files[0].size > 10485760){ alert('File is too large! Maximum size is 10MB.'); this.value = ''; }">
+                            <small class="text-muted d-block mt-1">Maximum upload limit: 10MB</small>
                             <div class="mt-3 d-none text-center" id="replyImagePreviewContainer">
                                 <img id="replyImagePreview" src="" class="img-thumbnail bg-dark border-secondary" style="max-height: 200px;" alt="Image Preview">
                             </div>

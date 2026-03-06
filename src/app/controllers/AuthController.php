@@ -21,6 +21,13 @@ class AuthController extends Controller {
             $email = $_POST['email'] ?? '';
 
             if ($username && $password && $email) {
+                // Validate password complexity
+                if (strlen($password) < 8 || !preg_match('/[0-9]/', $password) || !preg_match('/[^a-zA-Z0-9]/', $password)) {
+                    $_SESSION['register_error'] = "Password must be at least 8 characters long, contain at least 1 number, and 1 special character.";
+                    $this->redirect('/register');
+                    return;
+                }
+
                 // Check if user already exists
                 $existingUser = $this->UserModel->getUserByUsername($username);
                 if (!$existingUser) {
