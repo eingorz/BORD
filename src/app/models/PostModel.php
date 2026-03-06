@@ -108,6 +108,24 @@ class PostModel extends Model {
         ]);
     }
 
+    public function getRecentRepliesForThread(int $parentid, int $limit = 3) : array {
+        $limit = (int)$limit;
+        
+        $replies = $this->fetchAll("
+            SELECT posts.*, users.username 
+            FROM posts 
+            LEFT JOIN users ON posts.userid = users.id 
+            WHERE posts.parentid = :parentid
+            ORDER BY posts.timestamp DESC
+            LIMIT $limit
+        ", [
+            'parentid' => $parentid
+        ]);
+        
+        // Return them in chronological order so they read naturally top-to-bottom
+        return array_reverse($replies);
+    }
+
 
 
     public function deletePost(int $id) : bool {

@@ -87,6 +87,14 @@ require __DIR__ . '/header.php';
                     <?php endif; ?>
                 </div>
                 
+                <?php if (!empty($thread['replied_by'])): ?>
+                    <div class="mb-2 small" style="margin-top: -0.25rem;">
+                        <?php foreach ($thread['replied_by'] as $r_id): ?>
+                            <a href="#post-<?php echo htmlspecialchars($r_id); ?>" class="text-info text-decoration-none me-1" style="font-size: 0.85em;">&gt;&gt;<?php echo htmlspecialchars($r_id); ?></a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Thread Content (Flex Layout for Image + Text) -->
                 <div class="d-flex flex-column flex-md-row gap-3">
                     <?php if ($thread['attachment']): ?>
@@ -105,6 +113,63 @@ require __DIR__ . '/header.php';
                 </div>
             </div>
         </div>
+
+        <?php if (isset($thread['omitted_replies'])): ?>
+            <div class="mt-4 ms-md-5 ps-md-4">
+                <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="text-muted small text-decoration-none">
+                    <?php echo $thread['omitted_replies']; ?>
+                </a>
+            </div>
+        <?php endif; ?>
+
+        <?php if (!empty($thread['recent_replies'])): ?>
+            <div class="mt-3 ms-md-5 ps-md-4 border-start border-secondary border-3">
+                <?php foreach ($thread['recent_replies'] as $reply): ?>
+                    <div class="card mb-3 shadow-none border-secondary bg-dark ms-3" id="post-<?php echo htmlspecialchars($reply['id']); ?>">
+                        <div class="card-body py-2">
+                            <div class="mb-2 text-muted small border-bottom border-secondary pb-2">
+                                <?php if (isset($reply['username']) && $reply['username'] !== null): ?>
+                                    <a href="<?= BASE_URL ?>/user/<?php echo urlencode($reply['username']); ?>" class="text-decoration-none profile-link" data-username="<?php echo htmlspecialchars($reply['username']); ?>">
+                                        <span class="text-info fw-bold"><?php echo htmlspecialchars($reply['username']); ?></span>
+                                    </a>
+                                <?php else: ?>
+                                    <span class="text-info fw-bold">Anonymous</span> 
+                                <?php endif; ?>
+                                <?php echo htmlspecialchars($reply['timestamp']); ?> 
+                                
+                                <span class="float-end">
+                                    No. <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>#post-<?php echo htmlspecialchars($reply['id']); ?>" class="text-info text-decoration-none"><?php echo htmlspecialchars($reply['id']); ?></a>
+                                </span>
+                            </div>
+
+                            <?php if (!empty($reply['replied_by'])): ?>
+                                <div class="mb-2 small" style="margin-top: -0.25rem;">
+                                    <?php foreach ($reply['replied_by'] as $r_id): ?>
+                                        <a href="#post-<?php echo htmlspecialchars($r_id); ?>" class="text-info text-decoration-none me-1" style="font-size: 0.85em;">&gt;&gt;<?php echo htmlspecialchars($r_id); ?></a>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="d-flex flex-column flex-md-row gap-3 mt-2">
+                                <?php if ($reply['attachment']): ?>
+                                    <div class="flex-shrink-0" style="max-width: 100%;">
+                                        <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
+                                            File: <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($reply['attachment']); ?></a>
+                                        </div>
+                                        <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>#post-<?php echo htmlspecialchars($reply['id']); ?>">
+                                            <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 150px; height: auto;" alt="Attachment">
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="text-break text-light" style="font-size: 0.95em;">
+                                    <?php echo $reply['parsed_content']; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     <?php endforeach; ?>
 <?php endif; ?>
 

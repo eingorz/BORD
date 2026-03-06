@@ -72,6 +72,53 @@ class BoardController extends Controller {
         
         foreach ($posts as &$post) {
             $post['parsed_content'] = $this->parseContent($post['content']);
+            $post['recent_replies'] = [];
+            $post['omitted_replies'] = null;
+
+            $allReplies = $this->PostModel->getReplies($post['id']);
+            $totalThreadReplies = count($allReplies);
+            $post['replied_by'] = [];
+            
+            if ($totalThreadReplies > 0) {
+                if ($totalThreadReplies > 3) {
+                    $omittedCount = $totalThreadReplies - 3;
+                    $post['omitted_replies'] = "$omittedCount replies omitted. Click here to view.";
+                }
+
+                // Now extract just the last 3 to show on the board
+                $recentReplies = array_slice($allReplies, -3);
+
+                // Prepare only the visible replies
+                foreach ($recentReplies as &$reply) {
+                    $reply['parsed_content'] = $this->parseContent($reply['content']);
+                    $reply['replied_by'] = [];
+                }
+                unset($reply);
+
+                // Calculate backlinks ONLY from these visible recent replies
+                // So the OP and other recent replies ONLY get backlinks from the visible ones.
+                foreach ($recentReplies as $reply) {
+                    if (preg_match_all('/>>([0-9]+)/', $reply['content'], $matches)) {
+                        $unique_mentions = array_unique($matches[1]);
+                        foreach ($unique_mentions as $mentioned_id) {
+                            if ((int)$post['id'] === (int)$mentioned_id) {
+                                // Add backlink to the OP
+                                $post['replied_by'][] = $reply['id'];
+                            } else {
+                                foreach ($recentReplies as &$r) {
+                                    if ((int)$r['id'] === (int)$mentioned_id) {
+                                        $r['replied_by'][] = $reply['id'];
+                                        break;
+                                    }
+                                }
+                                unset($r);
+                            }
+                        }
+                    }
+                }
+                
+                $post['recent_replies'] = $recentReplies;
+            }
         }
         unset($post); // Break the reference
 
