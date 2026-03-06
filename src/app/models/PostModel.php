@@ -58,6 +58,20 @@ class PostModel extends Model {
             'id' => $id
         ]);
     }
+
+    public function getRecentBumpedThreads(int $limit = 6) : array {
+        $limit = (int)$limit;
+        
+        return $this->fetchAll("
+            SELECT posts.*, users.username, boards.shortname 
+            FROM posts 
+            LEFT JOIN users ON posts.userid = users.id 
+            LEFT JOIN boards ON posts.boardid = boards.id
+            WHERE posts.parentid IS NULL 
+            ORDER BY posts.bumptimestamp DESC
+            LIMIT $limit
+        ");
+    }
     // There's no reason to create a createReply function as its just a matter of the parentid being or not being a thing anyway :)
     // Thus we should just use createPost whenever we need to add a reply
 

@@ -25,8 +25,19 @@ class BoardController extends Controller {
             $categorizedBoards[$catName][] = $board;
         }
 
+        $recentThreads = $this->PostModel->getRecentBumpedThreads(8);
+        foreach ($recentThreads as &$thread) {
+            $preview = $thread['content'];
+            if (mb_strlen($preview) > 100) {
+                $preview = mb_substr($preview, 0, 97) . '...';
+            }
+            $thread['parsed_content'] = $this->parseContent($preview);
+        }
+        unset($thread);
+
         $this->render('homepage', [
-            'categorizedBoards' => $categorizedBoards
+            'categorizedBoards' => $categorizedBoards,
+            'recentThreads' => $recentThreads
         ]);
     }
     private function parseContent(string $content) : string {
