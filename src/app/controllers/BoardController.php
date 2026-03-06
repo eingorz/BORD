@@ -112,13 +112,35 @@ class BoardController extends Controller {
         $post = $this->PostModel->getPostById((int)$id);
         if ($post) {
             $post['parsed_content'] = $this->parseContent($post['content']);
+            $post['replied_by'] = [];
         }
 
         $replies = $this->PostModel->getReplies((int)$id);
         foreach ($replies as &$reply) {
             $reply['parsed_content'] = $this->parseContent($reply['content']);
+            $reply['replied_by'] = [];
         }
         unset($reply);
+
+        // Calculate backlinks
+        foreach ($replies as $reply) {
+            if (preg_match_all('/>>([0-9]+)/', $reply['content'], $matches)) {
+                $unique_mentions = array_unique($matches[1]);
+                foreach ($unique_mentions as $mentioned_id) {
+                    if ($post && (int)$post['id'] === (int)$mentioned_id) {
+                        $post['replied_by'][] = $reply['id'];
+                    } else {
+                        foreach ($replies as &$r) {
+                            if ((int)$r['id'] === (int)$mentioned_id) {
+                                $r['replied_by'][] = $reply['id'];
+                                break;
+                            }
+                        }
+                        unset($r);
+                    }
+                }
+            }
+        }
 
         // Pass both the shortname and the thread data to the view
         $this->render('thread', [

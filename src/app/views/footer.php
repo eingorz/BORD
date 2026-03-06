@@ -161,6 +161,89 @@ document.addEventListener('DOMContentLoaded', function () {
     
     setupImagePreview('boardAttachmentInput', 'boardImagePreviewContainer', 'boardImagePreview');
     setupImagePreview('replyAttachmentInput', 'replyImagePreviewContainer', 'replyImagePreview');
+
+    // --- Post Inline Hover Preview ---
+    const postPreviewContainer = document.createElement('div');
+    postPreviewContainer.id = 'post-hover-preview';
+    postPreviewContainer.style.position = 'fixed';
+    postPreviewContainer.style.display = 'none';
+    postPreviewContainer.style.zIndex = '9998'; // Just below image previews
+    postPreviewContainer.style.pointerEvents = 'none';
+    postPreviewContainer.style.maxWidth = '600px';
+    postPreviewContainer.style.width = '100%';
+    document.body.appendChild(postPreviewContainer);
+
+    document.querySelectorAll('a[href^="#post-"]').forEach(link => {
+        link.addEventListener('mouseenter', function (e) {
+            const targetId = this.getAttribute('href').substring(1); // Remove the '#'
+            const targetPost = document.getElementById(targetId);
+            
+            if (targetPost) {
+                // Clone the post element
+                const clone = targetPost.cloneNode(true);
+                
+                // Cleanup the clone to remove unnecessary elements for a preview
+                clone.style.margin = '0';
+                clone.className = 'card border-secondary shadow-lg bg-dark-subtle'; // Adjust classes for a floating preview
+                
+                // Remove interactive or clutter elements from the clone
+                const elementsToRemove = clone.querySelectorAll('form[id^="delete-"], a[onclick*="submit()"], strong[onclick*="addReply"]');
+                elementsToRemove.forEach(el => el.remove());
+
+                // Remove the "No. ID" text block entirely for a cleaner look natively
+                const noSpans = clone.querySelectorAll('.float-end');
+                noSpans.forEach(span => {
+                     if (span.textContent.includes('No.')) {
+                         span.remove();
+                     }
+                });
+                
+                postPreviewContainer.innerHTML = '';
+                postPreviewContainer.appendChild(clone);
+                postPreviewContainer.style.display = 'block';
+                
+                // Initial positioning calculation
+                let x = e.clientX + 15;
+                let y = e.clientY + 15;
+                
+                // Ensure it doesn't bleed off the right edge
+                if (x + postPreviewContainer.offsetWidth > window.innerWidth) {
+                    x = e.clientX - postPreviewContainer.offsetWidth - 15;
+                }
+                
+                // Ensure it doesn't bleed off the bottom edge
+                if (y + postPreviewContainer.offsetHeight > window.innerHeight) {
+                    y = e.clientY - postPreviewContainer.offsetHeight - 15;
+                }
+                
+                postPreviewContainer.style.left = Math.max(0, x) + 'px';
+                postPreviewContainer.style.top = Math.max(0, y) + 'px';
+            }
+        });
+
+        link.addEventListener('mousemove', function (e) {
+            if (postPreviewContainer.style.display === 'block') {
+                let x = e.clientX + 15;
+                let y = e.clientY + 15;
+
+                if (x + postPreviewContainer.offsetWidth > window.innerWidth) {
+                    x = e.clientX - postPreviewContainer.offsetWidth - 15;
+                }
+
+                if (y + postPreviewContainer.offsetHeight > window.innerHeight) {
+                    y = e.clientY - postPreviewContainer.offsetHeight - 15;
+                }
+
+                postPreviewContainer.style.left = Math.max(0, x) + 'px';
+                postPreviewContainer.style.top = Math.max(0, y) + 'px';
+            }
+        });
+
+        link.addEventListener('mouseleave', function () {
+            postPreviewContainer.style.display = 'none';
+            postPreviewContainer.innerHTML = '';
+        });
+    });
 });
 </script>
 </body>

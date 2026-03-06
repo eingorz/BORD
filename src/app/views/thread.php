@@ -74,6 +74,13 @@ require __DIR__ . '/header.php';
         <span class="float-end">No. <strong style="cursor: pointer;" onclick="addReply(event, '<?php echo htmlspecialchars($post['id']); ?>')"><?php echo htmlspecialchars($post['id']); ?></strong></span>
     </div>
     <div class="card-body">
+        <?php if (!empty($post['replied_by'])): ?>
+            <div class="mb-2 small" style="margin-top: -0.25rem;">
+                <?php foreach ($post['replied_by'] as $r_id): ?>
+                    <a href="#post-<?php echo htmlspecialchars($r_id); ?>" class="text-info text-decoration-none me-1" style="font-size: 0.85em;">&gt;&gt;<?php echo htmlspecialchars($r_id); ?></a>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
         <div class="d-flex flex-column flex-md-row gap-3">
             <?php if ($post['attachment']): ?>
                 <div class="flex-shrink-0" style="max-width: 100%;">
@@ -123,6 +130,14 @@ require __DIR__ . '/header.php';
                         
                         <span class="float-end">No. <strong style="cursor: pointer;" onclick="addReply(event, '<?php echo htmlspecialchars($reply['id']); ?>')"><?php echo htmlspecialchars($reply['id']); ?></strong></span>
                     </div>
+
+                    <?php if (!empty($reply['replied_by'])): ?>
+                        <div class="mb-2 small" style="margin-top: -0.25rem;">
+                            <?php foreach ($reply['replied_by'] as $r_id): ?>
+                                <a href="#post-<?php echo htmlspecialchars($r_id); ?>" class="text-info text-decoration-none me-1" style="font-size: 0.85em;">&gt;&gt;<?php echo htmlspecialchars($r_id); ?></a>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                     
                     <div class="d-flex flex-column flex-md-row gap-3 mt-2">
                         <?php if ($reply['attachment']): ?>
