@@ -73,7 +73,7 @@ require __DIR__ . '/header.php';
                     <?php else: ?>
                         <span class="text-primary fw-bold">Anonymous</span> 
                     <?php endif; ?>
-                    <?php echo $thread['bumptimestamp']; ?> 
+                    <?php echo $thread['timestamp']; ?> 
                     <span class="ms-2">No. <strong><a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>"><?php echo $thread['id']; ?></a></strong></span>
                     <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="float-end text-decoration-none ms-2">[Reply]</a>
                     
