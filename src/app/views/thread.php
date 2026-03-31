@@ -1,6 +1,14 @@
-<?php 
-$title = "Thread #{$post['id']}";
-require __DIR__ . '/header.php'; 
+<?php
+$title = "Thread #{$post['id']} — /{$shortname}/";
+
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$absolute_base = $scheme . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
+
+$og_url         = $absolute_base . '/' . $shortname . '/thread/' . $post['id'];
+$og_description = mb_substr(strip_tags($post['content']), 0, 200) . (mb_strlen($post['content']) > 200 ? '...' : '');
+$og_image       = $post['attachment'] ? ($absolute_base . '/public/uploads/' . $post['attachment']) : null;
+
+require __DIR__ . '/header.php';
 ?>
 
 <div class="mb-4">

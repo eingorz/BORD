@@ -116,6 +116,16 @@
     </style>
 
     <title><?php echo $title ?? 'BORD'; ?></title>
+    <?php if (isset($og_url)): ?>
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="BÖRD">
+    <meta property="og:url"         content="<?php echo htmlspecialchars($og_url); ?>">
+    <meta property="og:title"       content="<?php echo htmlspecialchars($title ?? 'BORD'); ?>">
+    <meta property="og:description" content="<?php echo htmlspecialchars($og_description ?? ''); ?>">
+    <?php if (!empty($og_image)): ?>
+    <meta property="og:image"       content="<?php echo htmlspecialchars($og_image); ?>">
+    <?php endif; ?>
+    <?php endif; ?>
 </head>
 <body class="bg-dark text-light">
 
