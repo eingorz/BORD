@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Only fetch if it's the very first time we've hovered this specific user
             userCache[username] = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm text-primary" role="status"></div></div>'; // Prevent duplicate fetches
 
-            fetch(`/api/user/${encodeURIComponent(username)}`)
+            fetch(`<?= BASE_URL ?>/api/user/${encodeURIComponent(username)}`)
                 .then(response => response.json())
                 .then(user => {
                     const roleBadge = user.role == 2 ? '<span class="badge bg-danger mt-1">Admin</span>' : '<span class="badge bg-primary mt-1">User</span>';
