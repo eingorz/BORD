@@ -1,6 +1,14 @@
-<?php 
+<?php
 $title = "/{$board['shortname']}/ - {$board['longname']}";
-require __DIR__ . '/header.php'; 
+
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$absolute_base = $scheme . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
+
+$og_url         = $absolute_base . '/' . $board['shortname'] . '/';
+$og_description = '/' . $board['shortname'] . '/ — ' . $board['longname'] . ' · BÖRD imageboard';
+$og_image       = null;
+
+require __DIR__ . '/header.php';
 ?>
 
 <div class="row align-items-center mb-4">

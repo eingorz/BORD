@@ -8,6 +8,13 @@ $og_url         = $absolute_base . '/' . $shortname . '/thread/' . $post['id'];
 $og_description = mb_substr(strip_tags($post['content']), 0, 200) . (mb_strlen($post['content']) > 200 ? '...' : '');
 $og_image       = $post['attachment'] && !in_array(strtolower(pathinfo($post['attachment'], PATHINFO_EXTENSION)), ['webm', 'mp4']) ? ($absolute_base . '/public/uploads/' . $post['attachment']) : null;
 
+$og_video       = null;
+$og_video_type  = null;
+if ($post['attachment'] && strtolower(pathinfo($post['attachment'], PATHINFO_EXTENSION)) === 'mp4') {
+    $og_video      = $absolute_base . '/public/uploads/' . $post['attachment'];
+    $og_video_type = 'video/mp4';
+}
+
 require __DIR__ . '/header.php';
 ?>
 

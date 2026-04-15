@@ -1,6 +1,14 @@
-<?php 
-$title = "BORD - Homepage";
-require __DIR__ . '/header.php'; 
+<?php
+$title = "BÖRD - Homepage";
+
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$absolute_base = $scheme . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
+
+$og_url         = $absolute_base . '/';
+$og_description = 'BÖRD — an imageboard. Select a board and start posting.';
+$og_image       = null;
+
+require __DIR__ . '/header.php';
 ?>
 
 <div class="row mb-4">
@@ -58,7 +66,7 @@ require __DIR__ . '/header.php';
                         <?php if ($thread['attachment']): ?>
                             <?php $attachExt = strtolower(pathinfo($thread['attachment'], PATHINFO_EXTENSION)); ?>
                             <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
-                                <video loop muted autoplay class="border border-secondary" style="max-height: 180px; max-width: 100%; object-fit: contain; background-color: transparent; pointer-events: none;">
+                                <video preload="metadata" class="border border-secondary" style="max-height: 180px; max-width: 100%; object-fit: contain; background-color: transparent; pointer-events: none;">
                                     <source src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($thread['attachment']) ?>" type="video/<?= $attachExt ?>">
                                 </video>
                             <?php else: ?>
