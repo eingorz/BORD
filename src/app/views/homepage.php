@@ -58,7 +58,7 @@ require __DIR__ . '/header.php';
                         <?php if ($thread['attachment']): ?>
                             <?php $attachExt = strtolower(pathinfo($thread['attachment'], PATHINFO_EXTENSION)); ?>
                             <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
-                                <video controls loop muted class="border border-secondary" style="max-height: 180px; max-width: 100%; object-fit: contain; background-color: transparent;">
+                                <video loop muted autoplay class="border border-secondary" style="max-height: 180px; max-width: 100%; object-fit: contain; background-color: transparent; pointer-events: none;">
                                     <source src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($thread['attachment']) ?>" type="video/<?= $attachExt ?>">
                                 </video>
                             <?php else: ?>
