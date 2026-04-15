@@ -6,7 +6,7 @@ $absolute_base = $scheme . '://' . $_SERVER['HTTP_HOST'] . BASE_URL;
 
 $og_url         = $absolute_base . '/' . $shortname . '/thread/' . $post['id'];
 $og_description = mb_substr(strip_tags($post['content']), 0, 200) . (mb_strlen($post['content']) > 200 ? '...' : '');
-$og_image       = $post['attachment'] ? ($absolute_base . '/public/uploads/' . $post['attachment']) : null;
+$og_image       = $post['attachment'] && !in_array(strtolower(pathinfo($post['attachment'], PATHINFO_EXTENSION)), ['webm', 'mp4']) ? ($absolute_base . '/public/uploads/' . $post['attachment']) : null;
 
 require __DIR__ . '/header.php';
 ?>
@@ -38,11 +38,11 @@ require __DIR__ . '/header.php';
                     <?php endif; ?>
                     <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>/<?php echo htmlspecialchars($shortname); ?>/thread/<?php echo $post['id']; ?>/reply">
                         <div class="mb-3">
-                            <label class="form-label text-light fw-bold">Attach Image:</label>
-                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif" id="replyAttachmentInput" onchange="if(this.files[0] && this.files[0].size > 10485760){ alert('File is too large! Maximum size is 10MB.'); this.value = ''; }">
+                            <label class="form-label text-light fw-bold">Attach File:</label>
+                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif, video/webm, video/mp4" id="replyAttachmentInput" onchange="if(this.files[0] && this.files[0].size > 10485760){ alert('File is too large! Maximum size is 10MB.'); this.value = ''; }">
                             <small class="text-muted d-block mt-1">Maximum upload limit: 10MB</small>
                             <div class="mt-3 d-none text-center" id="replyImagePreviewContainer">
-                                <img id="replyImagePreview" src="" class="img-thumbnail bg-dark border-secondary" style="max-height: 200px;" alt="Image Preview">
+                                <img id="replyImagePreview" src="" class="img-thumbnail bg-dark border-secondary" style="max-height: 200px;" alt="Preview">
                             </div>
                         </div>
                         <div class="mb-3">
@@ -91,13 +91,20 @@ require __DIR__ . '/header.php';
         <?php endif; ?>
         <div class="d-flex flex-column flex-md-row gap-3">
             <?php if ($post['attachment']): ?>
+                <?php $attachExt = strtolower(pathinfo($post['attachment'], PATHINFO_EXTENSION)); ?>
                 <div class="flex-shrink-0" style="max-width: 100%;">
                     <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
                         File: <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($post['attachment']); ?></a>
                     </div>
-                    <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank">
-                        <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 300px; height: auto;" alt="Attachment">
-                    </a>
+                    <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
+                        <video controls loop muted style="max-width: 300px; height: auto;" class="border border-secondary rounded">
+                            <source src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" type="video/<?= $attachExt ?>">
+                        </video>
+                    <?php else: ?>
+                        <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" target="_blank">
+                            <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($post['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 300px; height: auto;" alt="Attachment">
+                        </a>
+                    <?php endif; ?>
                 </div>
             <?php endif; ?>
             <div class="text-break text-light fs-5">
@@ -149,13 +156,20 @@ require __DIR__ . '/header.php';
                     
                     <div class="d-flex flex-column flex-md-row gap-3 mt-2">
                         <?php if ($reply['attachment']): ?>
+                            <?php $attachExt = strtolower(pathinfo($reply['attachment'], PATHINFO_EXTENSION)); ?>
                             <div class="flex-shrink-0" style="max-width: 100%;">
                                 <div class="small text-muted mb-1 text-truncate" style="max-width: 100%;">
                                     File: <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank" class="text-decoration-none text-info"><?php echo htmlspecialchars($reply['attachment']); ?></a>
                                 </div>
-                                <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank">
-                                    <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 200px; height: auto;" alt="Attachment">
-                                </a>
+                                <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
+                                    <video controls loop muted style="max-width: 200px; height: auto;" class="border border-secondary rounded">
+                                        <source src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" type="video/<?= $attachExt ?>">
+                                    </video>
+                                <?php else: ?>
+                                    <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" target="_blank">
+                                        <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($reply['attachment']); ?>" class="img-thumbnail bg-dark border-secondary" style="max-width: 200px; height: auto;" alt="Attachment">
+                                    </a>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                         <div class="text-break text-light">

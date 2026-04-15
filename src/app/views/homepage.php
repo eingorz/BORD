@@ -56,7 +56,14 @@ require __DIR__ . '/header.php';
                     
                     <a href="<?= BASE_URL ?>/<?= htmlspecialchars($thread['shortname']) ?>/thread/<?= $thread['id'] ?>" class="d-block mb-2 text-decoration-none">
                         <?php if ($thread['attachment']): ?>
-                            <img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($thread['attachment']) ?>" class="img-fluid border border-secondary img-thumbnail" style="max-height: 180px; max-width: 100%; object-fit: contain; padding: 0; background-color: transparent;" alt="Attachment">
+                            <?php $attachExt = strtolower(pathinfo($thread['attachment'], PATHINFO_EXTENSION)); ?>
+                            <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
+                                <video controls loop muted class="border border-secondary" style="max-height: 180px; max-width: 100%; object-fit: contain; background-color: transparent;">
+                                    <source src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($thread['attachment']) ?>" type="video/<?= $attachExt ?>">
+                                </video>
+                            <?php else: ?>
+                                <img src="<?= BASE_URL ?>/public/uploads/<?= htmlspecialchars($thread['attachment']) ?>" class="img-fluid border border-secondary img-thumbnail" style="max-height: 180px; max-width: 100%; object-fit: contain; padding: 0; background-color: transparent;" alt="Attachment">
+                            <?php endif; ?>
                         <?php else: ?>
                             <div class="border border-secondary d-flex align-items-center justify-content-center" style="width: 150px; height: 150px; background-color: #222;">
                                 <span class="text-muted small">No Image</span>

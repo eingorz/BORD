@@ -24,10 +24,21 @@ require __DIR__ . '/header.php';
         <div class="collapse" id="newThreadForm">
             <div class="card shadow-sm border-secondary bg-dark-subtle">
                 <div class="card-body">
+                    <?php if (isset($_SESSION['upload_error'])): ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?php echo htmlspecialchars($_SESSION['upload_error']); unset($_SESSION['upload_error']); ?>
+                        </div>
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                bootstrap.Collapse.getOrCreateInstance(document.getElementById('newThreadForm')).show();
+                            });
+                        </script>
+                    <?php endif; ?>
                     <form method="POST" enctype="multipart/form-data" action="<?= BASE_URL ?>/<?php echo htmlspecialchars($board['shortname']); ?>/submit">
                         <div class="mb-3">
-                            <label class="form-label text-light fw-bold">Attach Image:</label>
-                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif">
+                            <label class="form-label text-light fw-bold">Attach File:</label>
+                            <input type="file" class="form-control bg-dark text-light border-secondary" name="attachment" accept="image/png, image/jpeg, image/gif, video/webm, video/mp4" onchange="if(this.files[0] && this.files[0].size > 10485760){ alert('File is too large! Maximum size is 10MB.'); this.value = ''; }">
+                            <small class="text-muted d-block mt-1">Maximum upload limit: 10MB</small>
                         </div>
                         <div class="mb-3">
                             <textarea class="form-control bg-dark text-light border-secondary" name="content" rows="4" placeholder="What's on your mind?" required></textarea>
@@ -55,7 +66,14 @@ require __DIR__ . '/header.php';
                     <div class="card-body p-2 d-flex flex-column align-items-center justify-content-start text-light">
                         <a href="<?= BASE_URL ?>/<?php echo $board['shortname']; ?>/thread/<?php echo $thread['id']; ?>" class="d-block w-100 mb-2">
                             <?php if ($thread['attachment']): ?>
-                                <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid" style="max-height: 250px; object-fit: contain;" alt="Attachment">
+                                <?php $attachExt = strtolower(pathinfo($thread['attachment'], PATHINFO_EXTENSION)); ?>
+                                <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
+                                    <video controls loop muted style="max-height: 250px; width: 100%; object-fit: contain;">
+                                        <source src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" type="video/<?= $attachExt ?>">
+                                    </video>
+                                <?php else: ?>
+                                    <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($thread['attachment']); ?>" class="img-fluid" style="max-height: 250px; object-fit: contain;" alt="Attachment">
+                                <?php endif; ?>
                             <?php else: ?>
                                 <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="width: 100%; height: 200px;">
                                     <span class="text-muted small">No Image</span>

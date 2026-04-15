@@ -2,7 +2,7 @@
 session_start();
 
 // Auto-detect base path for views and routing
-define('BASE_URL', '/bord');
+define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 
 
 $config = require __DIR__ .'/config/database.php';

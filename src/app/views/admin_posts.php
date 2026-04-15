@@ -41,11 +41,20 @@ require __DIR__ . '/admin_nav.php';
                                         <?php endif; ?>
                                     </td>
 
-                                    <td class="align-middle text-muted text-center" style="width: 100px;">
+                                    <td class="align-middle text-center" style="width: 100px;">
                                         <?php if ($p['attachment']): ?>
-                                            <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" target="_blank" class="text-muted text-decoration-none">[View]</a>
+                                            <?php $attachExt = strtolower(pathinfo($p['attachment'], PATHINFO_EXTENSION)); ?>
+                                            <a href="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" target="_blank">
+                                                <?php if (in_array($attachExt, ['webm', 'mp4'])): ?>
+                                                    <video style="max-width: 80px; max-height: 80px; object-fit: contain;">
+                                                        <source src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" type="video/<?= $attachExt ?>">
+                                                    </video>
+                                                <?php else: ?>
+                                                    <img src="<?= BASE_URL ?>/public/uploads/<?php echo htmlspecialchars($p['attachment']); ?>" style="max-width: 80px; max-height: 80px; object-fit: contain;" alt="Attachment">
+                                                <?php endif; ?>
+                                            </a>
                                         <?php else: ?>
-                                            <span class="opacity-50">None</span>
+                                            <span class="text-muted opacity-50">None</span>
                                         <?php endif; ?>
                                     </td>
 

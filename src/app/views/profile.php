@@ -107,8 +107,14 @@ document.addEventListener('DOMContentLoaded', function () {
         var files = e.target.files;
         if (files && files.length > 0) {
             var file = files[0];
-            
-            // Only handle images
+
+            // Skip the cropper for GIFs — canvas always flattens animation
+            if (file.type === 'image/gif') {
+                document.getElementById('cropped_pfp').value = '';
+                return;
+            }
+
+            // Only handle other images through the cropper
             if (/^image\/\w+/.test(file.type)) {
                 var reader = new FileReader();
                 reader.onload = function (event) {

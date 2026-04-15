@@ -199,28 +199,43 @@ class BoardController extends Controller {
 
     private function handleUpload(array $file) : ?string {
         if ($file['error'] !== UPLOAD_ERR_OK) return null;
-        
+
+        // Check for video types first — getimagesize() doesn't handle video
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $finfeMime = $finfo->file($file['tmp_name']);
+
+        if ($finfeMime === 'video/webm' || $finfeMime === 'video/mp4') {
+            $extension = $finfeMime === 'video/webm' ? '.webm' : '.mp4';
+            $filename = substr(bin2hex(random_bytes(6)), 0, 12) . $extension;
+            $destination = __DIR__ . '/../../public/uploads/' . $filename;
+            return move_uploaded_file($file['tmp_name'], $destination) ? $filename : null;
+        }
+
+        // For images, use getimagesize for strict validation
         $imageInfo = @getimagesize($file['tmp_name']);
         if ($imageInfo === false) return null;
 
         $mime = $imageInfo['mime'];
+
+        // GIFs are moved directly to preserve animation; JPEG/PNG go through GD to strip EXIF/polyglots
+        if ($mime === 'image/gif') {
+            $filename = substr(bin2hex(random_bytes(6)), 0, 12) . '.gif';
+            $destination = __DIR__ . '/../../public/uploads/' . $filename;
+            return move_uploaded_file($file['tmp_name'], $destination) ? $filename : null;
+        }
+
         $image = null;
         $extension = '';
-
         if ($mime === 'image/jpeg') {
             $image = @imagecreatefromjpeg($file['tmp_name']);
             $extension = '.jpg';
         } elseif ($mime === 'image/png') {
             $image = @imagecreatefrompng($file['tmp_name']);
             $extension = '.png';
-        } elseif ($mime === 'image/gif') {
-            $image = @imagecreatefromgif($file['tmp_name']);
-            $extension = '.gif';
         }
 
         if (!$image) return null;
 
-        // Exactly 16 characters for the DB schema limitation
         $filename = substr(bin2hex(random_bytes(6)), 0, 12) . $extension;
         $destination = __DIR__ . '/../../public/uploads/' . $filename;
 
@@ -229,10 +244,8 @@ class BoardController extends Controller {
             @imagejpeg($image, $destination, 90);
         } elseif ($mime === 'image/png') {
             @imagepng($image, $destination);
-        } elseif ($mime === 'image/gif') {
-            @imagegif($image, $destination);
         }
-        
+
         @imagedestroy($image);
         return file_exists($destination) ? $filename : null;
     }
@@ -256,7 +269,7 @@ class BoardController extends Controller {
                         if ($_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
                             $attachment = $this->handleUpload($_FILES['attachment']);
                             if (!$attachment) {
-                                $_SESSION['upload_error'] = "Failed to upload image. Invalid format or corrupted.";
+                                $_SESSION['upload_error'] = "Failed to upload file. Invalid format or corrupted.";
                                 $this->redirect('/' . $shortname . '/');
                                 return;
                             }
@@ -294,7 +307,7 @@ class BoardController extends Controller {
                         if ($_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
                             $attachment = $this->handleUpload($_FILES['attachment']);
                             if (!$attachment) {
-                                $_SESSION['upload_error'] = "Failed to upload image. Invalid format or corrupted.";
+                                $_SESSION['upload_error'] = "Failed to upload file. Invalid format or corrupted.";
                                 $this->redirect('/' . $shortname . '/thread/' . $id);
                                 return;
                             }

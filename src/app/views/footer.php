@@ -135,32 +135,56 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // --- Image Upload Preview ---
-    const setupImagePreview = (inputId, containerId, imgId) => {
+    // --- File Upload Preview (images + videos) ---
+    const setupFilePreview = (inputId, containerId, imgId) => {
         const input = document.getElementById(inputId);
         const container = document.getElementById(containerId);
         const img = document.getElementById(imgId);
-        
-        if (input && container && img) {
-            input.addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        img.src = e.target.result;
-                        container.classList.remove('d-none');
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    img.src = '';
-                    container.classList.add('d-none');
-                }
-            });
-        }
+
+        if (!input || !container || !img) return;
+
+        input.addEventListener('change', function() {
+            const file = this.files[0];
+
+            // Clean up any existing video element
+            const existingVideo = container.querySelector('video');
+            if (existingVideo) {
+                URL.revokeObjectURL(existingVideo.src);
+                existingVideo.remove();
+            }
+
+            if (!file) {
+                img.src = '';
+                img.style.display = '';
+                container.classList.add('d-none');
+                return;
+            }
+
+            if (file.type.startsWith('video/')) {
+                img.style.display = 'none';
+                const video = document.createElement('video');
+                video.controls = true;
+                video.muted = true;
+                video.style.maxHeight = '200px';
+                video.style.maxWidth = '100%';
+                video.className = 'rounded border border-secondary';
+                video.src = URL.createObjectURL(file);
+                container.appendChild(video);
+                container.classList.remove('d-none');
+            } else {
+                img.style.display = '';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    container.classList.remove('d-none');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     };
-    
-    setupImagePreview('boardAttachmentInput', 'boardImagePreviewContainer', 'boardImagePreview');
-    setupImagePreview('replyAttachmentInput', 'replyImagePreviewContainer', 'replyImagePreview');
+
+    setupFilePreview('boardAttachmentInput', 'boardImagePreviewContainer', 'boardImagePreview');
+    setupFilePreview('replyAttachmentInput', 'replyImagePreviewContainer', 'replyImagePreview');
 
     // --- Post Inline Hover Preview ---
     const postPreviewContainer = document.createElement('div');

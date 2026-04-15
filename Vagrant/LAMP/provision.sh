@@ -82,9 +82,12 @@ a2enmod rewrite
 #          PHP CONFIG (UPLOADS)       #
 #######################################
 
-PHP_INI=$(php -r "echo php_ini_loaded_file();")
-sed -i "s/upload_max_filesize = .*/upload_max_filesize = ${UPLOAD_MAX}/" ${PHP_INI}
-sed -i "s/post_max_size = .*/post_max_size = ${POST_MAX}/" ${PHP_INI}
+PHP_INI_CLI=$(php -r "echo php_ini_loaded_file();")
+PHP_INI_APACHE=$(php -r "echo php_ini_loaded_file();" | sed 's|/cli/|/apache2/|')
+for PHP_INI in "$PHP_INI_CLI" "$PHP_INI_APACHE"; do
+    sed -i "s/upload_max_filesize = .*/upload_max_filesize = ${UPLOAD_MAX}/" ${PHP_INI}
+    sed -i "s/post_max_size = .*/post_max_size = ${POST_MAX}/" ${PHP_INI}
+done
 
 #######################################
 #            MYSQL SETUP               #

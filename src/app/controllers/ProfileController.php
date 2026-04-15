@@ -64,20 +64,25 @@ class ProfileController extends Controller {
         $image = null;
         $extension = '';
 
+        // GIFs moved directly to preserve animation; JPEG/PNG go through GD to strip EXIF/polyglots
+        if ($mime === 'image/gif') {
+            $filename = substr(bin2hex(random_bytes(6)), 0, 12) . '.gif';
+            $destination = __DIR__ . '/../../public/uploads/' . $filename;
+            return move_uploaded_file($file['tmp_name'], $destination) ? $filename : null;
+        }
+
+        $image = null;
+        $extension = '';
         if ($mime === 'image/jpeg') {
             $image = @imagecreatefromjpeg($file['tmp_name']);
             $extension = '.jpg';
         } elseif ($mime === 'image/png') {
             $image = @imagecreatefrompng($file['tmp_name']);
             $extension = '.png';
-        } elseif ($mime === 'image/gif') {
-            $image = @imagecreatefromgif($file['tmp_name']);
-            $extension = '.gif';
         }
 
         if (!$image) return null;
 
-        // Exactly 16 characters for the DB schema limitation
         $filename = substr(bin2hex(random_bytes(6)), 0, 12) . $extension;
         $destination = __DIR__ . '/../../public/uploads/' . $filename;
 
@@ -85,10 +90,8 @@ class ProfileController extends Controller {
             @imagejpeg($image, $destination, 90);
         } elseif ($mime === 'image/png') {
             @imagepng($image, $destination);
-        } elseif ($mime === 'image/gif') {
-            @imagegif($image, $destination);
         }
-        
+
         @imagedestroy($image);
         return file_exists($destination) ? $filename : null;
     }
