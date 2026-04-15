@@ -125,8 +125,6 @@
     <?php if (!empty($og_image)): ?>
     <meta property="og:image"       content="<?php echo htmlspecialchars($og_image); ?>">
     <meta name="twitter:card"       content="summary_large_image">
-    <?php elseif (!empty($og_video)): ?>
-    <meta name="twitter:card"       content="player">
     <?php else: ?>
     <meta name="twitter:card"       content="summary">
     <?php endif; ?>
